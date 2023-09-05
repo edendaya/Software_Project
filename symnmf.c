@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include "symnmf.h"
 
 /*region TYPEDEF_AREA_OF_CODssE*/
 typedef struct Node
@@ -344,8 +345,8 @@ double **norm(double **A, double **D, int n)
 
     return W;
 }
-double** symnmf(double **H, double **W, int k, int n){
-    
+double **symnmf(double **H, double **W, int k, int n)
+{
 }
 
 /*endregion goals functions*/
