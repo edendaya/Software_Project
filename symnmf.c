@@ -211,6 +211,79 @@ ArrayInfo read_file_to_array(char *filename)
 }
 /*endregion PUT_INPUT_IN_ARRAY*/
 
+/*region goals functions*/
+// Function to calculate and output the similarity matrix
+void sym(double** X, int n) {
+    double** A = malloc(n * sizeof(double*));
+    for (int i = 0; i < n; i++) {
+        A[i] = malloc(n * sizeof(double));
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i != j) {
+                double squaredDistance = 0.0;
+                for (int d = 0; d < n; d++) {
+                    double diff = X[i][d] - X[j][d];
+                    squaredDistance += diff * diff;
+                }
+                A[i][j] = exp(-squaredDistance / 2);
+            } else {
+                A[i][j] = 0.0;
+            }
+            printf("%.4f ", A[i][j]); // Output the similarity matrix element
+        }
+        printf("\n");
+    }
+
+    // Free dynamically allocated memory
+    for (int i = 0; i < n; i++) {
+        free(A[i]);
+    }
+    free(A);
+}
+
+// Function to calculate and output the diagonal degree matrix
+void ddg(double** A, int n) {
+    double* D = malloc(n * sizeof(double));
+
+    for (int i = 0; i < n; i++) {
+        D[i] = 0.0;
+        for (int j = 0; j < n; j++) {
+            D[i] += A[i][j];
+        }
+        printf("%.4f\n", D[i]); // Output the degree value
+    }
+
+    // Free dynamically allocated memory
+    free(D);
+}
+
+// Function to calculate and output the normalized similarity matrix
+void norm(double** A, int n) {
+    double** W = malloc(n * sizeof(double*));
+    for (int i = 0; i < n; i++) {
+        W[i] = malloc(n * sizeof(double));
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            double sqrtDegreeI = sqrt(A[i][i]);
+            double sqrtDegreeJ = sqrt(A[j][j]);
+            W[i][j] = A[i][j] / (sqrtDegreeI * sqrtDegreeJ);
+            printf("%.4f ", W[i][j]); // Output the normalized similarity matrix element
+        }
+        printf("\n");
+    }
+
+    // Free dynamically allocated memory
+    for (int i = 0; i < n; i++) {
+        free(W[i]);
+    }
+    free(W);
+}
+/*endregion goals functions*/
+
 /*region MAIN*/
 int main(int argc, char *argv[])
 {
