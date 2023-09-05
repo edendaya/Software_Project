@@ -322,15 +322,31 @@ int main(int argc, char *argv[])
     // if mode is equal to sym
     if (strcmp(mode, "sym") == 0)
     {
-        /* code */
+        outputmatrix = sym(datapoints, number_datapoints);
     }
     else if (strcmp(mode, "ddg") == 0)
     {
-        /* code */
+        outputmatrix = ddg(datapoints, number_datapoints);
     }
     else if (strcmp(mode, "norm") == 0)
     {
-        /* code */
+        outputmatrix = norm(datapoints, number_datapoints);
+    }
+    else
+    {
+        printf("An Error Has Occurred: Invalid mode.\n");
+        exit(1);
+    }
+    // print outputmatrix
+    for (int i = 0; i < number_datapoints; i++)
+    {
+        for (int j = 0; j < number_datapoints; j++)
+        {
+            if (j != 0)
+                printf(",");
+            printf("%.4f", outputmatrix[i][j]);
+        }
+        printf("\n");
     }
 }
 
