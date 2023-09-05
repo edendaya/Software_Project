@@ -26,6 +26,12 @@ typedef struct
     int cols;
 } ArrayInfo;
 
+typedef struct {
+    double **array;
+    int rows;
+    int cols;
+} Matrix;
+
 /*region EXTERN_AND_CONST_VARS*/
 const int EPSILON = 0.001;
 int dimensionOfVector = 0;
@@ -257,25 +263,55 @@ double** ddg(double** A, int n) {
 
     return D; // Return the dynamically allocated array
 }
-
-// Function to calculate and output the normalized similarity matrix
-double** norm(double** A, int n) {
-    double** W = malloc(n * sizeof(double*));
-    for (int i = 0; i < n; i++) {
-        W[i] = malloc(n * sizeof(double));
+// Allocate memory for a matrix
+double** allocateMatrix(int rows, int cols) {
+    double *matrix = (double *) malloc(rows * sizeof(double *));
+    for (int i = 0; i < rows; ++i) {
+        matrix[i] = (double *) malloc(cols * sizeof(double));
     }
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            double sqrtDegreeI = sqrt(A[i][i]);
-            double sqrtDegreeJ = sqrt(A[j][j]);
-            W[i][j] = A[i][j] / (sqrtDegreeI * sqrtDegreeJ);
+    return matrix;
+}
+// Calculate the D^-1/2 matrix
+double** computeDHalfInverse(double **D, int n) {
+    double **D_half_inv = allocateMatrix(n, n);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            D_half_inv[i][j] = (i == j) ? 1 / sqrt(D[i][j]) : 0;
         }
     }
-    return W; // Return the dynamically allocated array
+    return D_half_inv;
 }
+// Multiply two matrices
+double** matrixMultiply(double **A, double **B, int n) {
+    double **result = allocateMatrix(n, n);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            result[i][j] = 0;
+            for (int k = 0; k < n; ++k) {
+                result[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+    return result;
+}
+// Function to calculate W = D^-1/2 * A * D^-1/2
+double** norm(double **A, double **D, int n) {
+    double **D_half_inv = computeDHalfInverse(D, n);
+    double **temp = matrixMultiply(D_half_inv, A, n);
+    double **W = matrixMultiply(temp, D_half_inv, n);
+
+    // Free allocated memory for intermediate matrices
+    for (int i = 0; i < n; ++i) {
+        free(D_half_inv[i]);
+        free(temp[i]);
+    }
+    free(D_half_inv);
+    free(temp);
+
+    return W;
+}
+
+
 /*endregion goals functions*/
 
 /*region MAIN*/

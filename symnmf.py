@@ -21,8 +21,10 @@ def read_file_to_array(file_path):
 # Define functions for various goals
 def symnmf(k, vectors):
     # Calculate the graph Laplacian W
-    W = symnmf.norm(vectors)
-
+    n = len(vectors)
+    A = symnmf.sym(vectors, n)
+    D = symnmf.ddg(A, n)
+    W = symnmf.norm(A, D, n)
     # Calculate the average of all entries of W
     m = np.mean(W)
 
@@ -30,7 +32,7 @@ def symnmf(k, vectors):
     H = np.random.uniform(0, 2 * np.sqrt(m / k), (len(vectors), k))
 
     # Call the symnmf() method from the C extension module
-    final_H = symnmf.symnmf(H, W, vectors)
+    final_H = symnmf.symnmf(H, W, vectors, k)
 
     # Output the final H matrix
     for row in final_H:
