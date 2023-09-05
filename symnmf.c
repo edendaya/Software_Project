@@ -42,6 +42,10 @@ int iter = 0;
 
 /*region PROTOTYPE_AREA_OF_CODE*/
 ArrayInfo **read_file_to_array(char *filename);
+double **sym(double **X, int n);
+double **ddg(double **A, int n);
+double **norm(double **A, int n);
+
 /*endregion PROTOTYPE_AREA_OF_CODE*/
 
 /*region PUT_INPUT_IN_ARRAY*/
@@ -219,9 +223,11 @@ ArrayInfo read_file_to_array(char *filename)
 
 /*region goals functions*/
 // Function to calculate and output the similarity matrix
-double** sym(double** X, int n) {
-    double** A = malloc(n * sizeof(double*));
-    for (int i = 0; i < n; i++) {
+double **sym(double **X, int n)
+{
+    double **A = malloc(n * sizeof(double *));
+    for (int i = 0; i < n; i++)
+    {
         A[i] = malloc(n * sizeof(double));
     }
 
@@ -249,8 +255,9 @@ double** sym(double** X, int n) {
 }
 
 // Function to calculate and output the diagonal degree matrix
-double** ddg(double** A, int n) {
-    double* D = malloc(n * sizeof(double));
+double **ddg(double **A, int n)
+{
+    double *D = malloc(n * sizeof(double));
 
     for (int i = 0; i < n; i++)
     {
