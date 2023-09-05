@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*region TYPEDEF_AREA_OF_CODssE*/
 typedef struct Node
@@ -18,6 +19,13 @@ typedef struct
 } LinkedList;
 /*endregion TYPEDEF_AREA_OF_CODE*/
 
+typedef struct
+{
+    double **array;
+    int rows;
+    int cols;
+} ArrayInfo;
+
 /*region EXTERN_AND_CONST_VARS*/
 const int EPSILON = 0.001;
 int dimensionOfVector = 0;
@@ -27,7 +35,7 @@ int iter = 0;
 /*endregion EXTERN_AND_CONST_VARS*/
 
 /*region PROTOTYPE_AREA_OF_CODE*/
-double **read_file_to_array(char *filename);
+ArrayInfo **read_file_to_array(char *filename);
 /*endregion PROTOTYPE_AREA_OF_CODE*/
 
 /*region PUT_INPUT_IN_ARRAY*/
@@ -102,7 +110,7 @@ void printList(LinkedList *list)
     current = list->tail;
 }
 
-double **read_file_to_array(char *filename)
+ArrayInfo read_file_to_array(char *filename)
 {
     FILE *file = fopen(filename, "r");
     if (file == NULL)
@@ -195,7 +203,11 @@ double **read_file_to_array(char *filename)
     }
 
     freeList(&allChars);
-    return array;
+    ArrayInfo result;
+    result.array = array;
+    result.rows = numberOfVectors;
+    result.cols = dimensionOfVector;
+    return result;
 }
 /*endregion PUT_INPUT_IN_ARRAY*/
 
@@ -203,200 +215,32 @@ double **read_file_to_array(char *filename)
 int main(int argc, char *argv[])
 {
     /* DECLARATION ON VARIABLES */
-    int *counters;
-    double **centriods, **oldcentriods, **vectors;
-    int firstiter;
-    int centroidindex;
-    int counter;
-    int i, j;
+    double **datapoints;
     char *mode, *input_file_name;
+    int number_datapoints;
 
     if (argc >= 3)
     {
         mode = atoi(argv[1]);
         input_file_name = atoi(argv[2]);
     }
+    ArrayInfo datapointsstruct = read_file_to_array(input_file_name);
+    datapoints = datapointsstruct.array;
+    number_datapoints = datapointsstruct.rows;
 
-    vectors = read_file_to_array(input_file_name);
-    /*CHECKING FOR INPUT ERRORS*/
-    if (K > 1 && K < numberOfVectors)
+    // if mode is equal to sym
+    if (strcmp(mode, "sym") == 0)
     {
-        /*pass*/
+        /* code */
     }
-    else
+    else if (strcmp(mode, "ddg") == 0)
     {
-        printf("Invalid number of clusters!");
-        for (i = 0; i < numberOfVectors; i++)
-        {
-            free(vectors[i]);
-        }
-        free(vectors);
-        return 1;
+        /* code */
     }
-    if (iter > 1 && iter < 1000)
+    else if (strcmp(mode, "norm") == 0)
     {
-        /*pass*/
+        /* code */
     }
-    else
-    {
-        printf("Invalid maximum iteration!");
-        for (i = 0; i < numberOfVectors; i++)
-        {
-            free(vectors[i]);
-        }
-        free(vectors);
-        return 1;
-    }
-    counters = (int *)malloc(K * sizeof(int)); /*array to count number of vectors of each centroid to calculate */
-    if (counters == NULL)
-    {
-        printf("An Error Has Occurred");
-        for (i = 0; i < numberOfVectors; i++)
-        {
-            free(vectors[i]);
-        }
-        free(vectors);
-        free(counters);
-        return 1;
-    }
-    oldcentriods = (double **)malloc(K * sizeof(double *));
-    if (oldcentriods == NULL)
-    {
-        printf("An Error Has Occurred");
-        for (i = 0; i < numberOfVectors; i++)
-        {
-            free(vectors[i]);
-        }
-        free(counters);
-        free(oldcentriods);
-        return 1;
-    }
-    for (i = 0; i < K; i++)
-    {
-        oldcentriods[i] = (double *)malloc(dimensionOfVector * sizeof(double));
-        if (oldcentriods[i] == NULL)
-        {
-            printf("An Error Has Occurred");
-            for (i = 0; i < numberOfVectors; i++)
-            {
-                free(vectors[i]);
-            }
-            free(counters);
-            return 1;
-        }
-    }
-    for (i = 0; i < K; i++)
-    {
-        for (j = 0; j < dimensionOfVector; j++)
-        {
-            oldcentriods[i][j] = 0;
-        }
-    }
-
-    centriods = (double **)malloc(K * sizeof(double *));
-    if (centriods == NULL)
-    {
-        printf("An Error Has Occurred");
-        for (i = 0; i < numberOfVectors; i++)
-        {
-            free(vectors[i]);
-        }
-        free(counters);
-        free(oldcentriods);
-        return 1;
-    }
-    for (i = 0; i < K; i++)
-    {
-        centriods[i] = (double *)malloc(dimensionOfVector * sizeof(double));
-        if (centriods[i] == NULL)
-        {
-            printf("An Error Has Occurred");
-            for (i = 0; i < numberOfVectors; i++)
-            {
-                free(vectors[i]);
-            }
-            free(counters);
-            free(oldcentriods);
-            return 1;
-        }
-    }
-
-    /*initialize centroids*/
-    for (i = 0; i < K; i++)
-    {
-        for (j = 0; j < dimensionOfVector; j++)
-        {
-            centriods[i][j] = vectors[i][j];
-        }
-    }
-
-    /*region ALGORITHEM*/
-    firstiter = 1;
-    centroidindex = -1;
-    counter = 0;
-    while (!convergence(centriods, oldcentriods, firstiter) && counter < iter)
-    {
-        for (i = 0; i < K; i++)
-        {
-            counters[i] = 0;
-        }
-        for (i = 0; i < K; i++)
-        {
-
-            for (j = 0; j < dimensionOfVector; j++)
-            {
-                oldcentriods[i][j] = centriods[i][j];
-                centriods[i][j] = 0;
-            }
-        }
-        for (i = 0; i < numberOfVectors; i++)
-        {
-            centroidindex = find_match_centroid_index(oldcentriods, vectors[i]);
-            add_vector_to_centroid(centriods[centroidindex], vectors[i], centroidindex, counters);
-        }
-
-        for (i = 0; i < K; i++)
-        {
-            average(centriods[i], counters[i]);
-        }
-
-        firstiter = 0;
-        counter++;
-    }
-
-    for (i = 0; i < K; i++)
-    {
-        for (j = 0; j < dimensionOfVector; j++)
-        {
-            printf("%.4f", centriods[i][j]);
-            if (j < dimensionOfVector - 1)
-                printf(",");
-        }
-        printf("\n");
-    }
-    printf("\n");
-
-    /*free memory*/
-    for (i = 0; i < numberOfVectors; i++)
-    {
-        free(vectors[i]);
-    }
-
-    free(counters);
-
-    for (i = 0; i < K; i++)
-    {
-        free(oldcentriods[i]);
-    }
-
-    for (i = 0; i < K; i++)
-    {
-        free(centriods[i]);
-    }
-    free(vectors);
-    free(centriods);
-    free(oldcentriods);
-    return 0;
 }
-/*endregion ALGORITHEM*/
+
 /*endregion MAIN*/
