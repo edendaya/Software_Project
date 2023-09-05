@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include "symnmf.h"
 
 /*region TYPEDEF_AREA_OF_CODssE*/
 typedef struct Node

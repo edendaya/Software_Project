@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include "symnmf.h"
 
 typedef struct
 {
@@ -11,11 +12,6 @@ typedef struct
     int rows;
     int cols;
 } ArrayInfo;
-
-// Function prototypes for sym, ddg, and norm
-double **sym(double **X, int n);
-double **ddg(double **A, int n);
-double **norm(double **A, int n);
 
 // Python wrapper functions
 static PyObject *py_sym(PyObject *self, PyObject *args)
@@ -193,87 +189,3 @@ PyMODINIT_FUNC PyInit_symnmfmodule(void)
 {
     return PyModule_Create(&symnmfmodule);
 }
-
-double **sym(double **X, int n)
-{
-    double **A = malloc(n * sizeof(double *));
-    for (int i = 0; i < n; i++)
-    {
-        A[i] = malloc(n * sizeof(double));
-    }
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            if (i != j)
-            {
-                double squaredDistance = 0.0;
-                for (int d = 0; d < n; d++)
-                {
-                    double diff = X[i][d] - X[j][d];
-                    squaredDistance += diff * diff;
-                }
-                A[i][j] = exp(-squaredDistance / 2);
-            }
-            else
-            {
-                A[i][j] = 0.0;
-            }
-        }
-    }
-    return A; // Return the dynamically allocated array
-}
-
-// Function to calculate and output the diagonal degree matrix
-double **ddg(double **A, int n)
-{
-    // Allocate a 2D array for D
-    double **D = malloc(n * sizeof(double *));
-    for (int i = 0; i < n; i++)
-    {
-        D[i] = malloc(n * sizeof(double));
-    }
-
-    // Initialize the array with zeros
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            D[i][j] = 0.0;
-        }
-    }
-
-    // Calculate the diagonal degree values
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            D[i][i] += A[i][j];
-        }
-    }
-
-    return D; // Return the dynamically allocated 2D array
-}
-
-// Function to calculate and output the normalized similarity matrix
-double **norm(double **A, int n)
-{
-    double **W = malloc(n * sizeof(double *));
-    for (int i = 0; i < n; i++)
-    {
-        W[i] = malloc(n * sizeof(double));
-    }
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            double sqrtDegreeI = sqrt(A[i][i]);
-            double sqrtDegreeJ = sqrt(A[j][j]);
-            W[i][j] = A[i][j] / (sqrtDegreeI * sqrtDegreeJ);
-        }
-    }
-    return W; // Return the dynamically allocated array
-}
-/*endregion goals functions*/
