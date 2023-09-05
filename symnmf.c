@@ -27,12 +27,7 @@ int iter = 0;
 /*endregion EXTERN_AND_CONST_VARS*/
 
 /*region PROTOTYPE_AREA_OF_CODE*/
-double **read_file_to_array();
-double delta(double *vector1, double *vector2);
-int convergence(double **centroids, double **oldcentroids, int oldcentroidslen);
-void add_vector_to_centroid(double *centroid, double *vector, int centroidindex, int *counters);
-void average(double *centroid, int counter);
-int find_match_centroid_index(double **centroids, double *vector);
+double **read_file_to_array(char *filename);
 /*endregion PROTOTYPE_AREA_OF_CODE*/
 
 /*region PUT_INPUT_IN_ARRAY*/
@@ -107,8 +102,15 @@ void printList(LinkedList *list)
     current = list->tail;
 }
 
-double **read_file_to_array()
+double **read_file_to_array(char *filename)
 {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        printf("An Error Has Occurred: Could not open file.\n");
+        exit(1);
+    }
+
     int wordlength;
     int i, j, k;
     double **array;
@@ -122,7 +124,7 @@ double **read_file_to_array()
     numberOfVectors = 0;
     didWeGetFirstLine = 0;
 
-    while ((ch = getchar()) != EOF) /* stop when end of file is reached */
+    while ((ch = fgetc(file)) != EOF) // Changed getchar() to fgetc(file)
     {
         if (ch == ',' && didWeGetFirstLine == 0)
         {
@@ -139,6 +141,7 @@ double **read_file_to_array()
             insert(&allChars, ch);
         }
     }
+    fclose(file); // Close the file
     array = malloc(numberOfVectors * sizeof(double *));
     if (array == NULL)
     {
@@ -196,86 +199,6 @@ double **read_file_to_array()
 }
 /*endregion PUT_INPUT_IN_ARRAY*/
 
-/*region FUNCTION_AREA_OF_CODE*/
-double delta(double *vector1, double *vector2)
-{
-    double output = 0.0;
-    int i;
-    for (i = 0; i < dimensionOfVector; i++)
-    {
-        output += pow(vector1[i] - vector2[i], 2);
-    }
-    return sqrt(output);
-}
-
-int convergence(double **centroids, double **oldcentroids, int firstiter)
-{
-    int i;
-    if (firstiter == 1)
-    {
-        return 0;
-    }
-    for (i = 0; i < K; i++)
-    {
-        if (delta(centroids[i], oldcentroids[i]) >= EPSILON)
-        {
-            return 0;
-        }
-    }
-    free(oldcentroids);
-    free(centroids);
-    return 1;
-}
-
-int find_match_centroid_index(double **centroids, double *vector)
-{
-    double closest_distance = delta(vector, centroids[0]);
-    int centroidindex = 0;
-    int i;
-
-    for (i = 1; i < K; i++)
-    {
-        double distance = delta(vector, centroids[i]);
-
-        if (distance < closest_distance)
-        {
-            closest_distance = distance;
-            centroidindex = i;
-        }
-    }
-    return centroidindex;
-}
-
-void add_vector_to_centroid(double *centroid, double *vector, int centroidindex, int *counters)
-{ /* adds the coordinates of the vector to his centroid */
-    int i;
-    for (i = 0; i < dimensionOfVector; i++)
-    {
-        centroid[i] += vector[i];
-    }
-    counters[centroidindex]++;
-}
-
-void average(double *centroid, int counter)
-{ /* update centroid after adding it all his vectors by divide it with counter */
-    int i;
-    for (i = 0; i < dimensionOfVector; i++)
-    {
-        double tmp = centroid[i];
-        if (counter == 0)
-        {
-            centroid[i] = 0;
-            continue;
-        }
-        else
-        {
-            centroid[i] = tmp / counter;
-        }
-    }
-}
-
-/*endregion FUNCTION_AREA_OF_CODE*/
-
 /*region MAIN*/
 int main(int argc, char *argv[])
 {
@@ -294,7 +217,7 @@ int main(int argc, char *argv[])
         input_file_name = atoi(argv[2]);
     }
 
-    vectors = read_file_to_array();
+    vectors = read_file_to_array(input_file_name);
     /*CHECKING FOR INPUT ERRORS*/
     if (K > 1 && K < numberOfVectors)
     {
