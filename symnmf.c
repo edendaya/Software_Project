@@ -26,7 +26,8 @@ typedef struct
     int cols;
 } ArrayInfo;
 
-typedef struct {
+typedef struct
+{
     double **array;
     int rows;
     int cols;
@@ -257,58 +258,84 @@ double **sym(double **X, int n)
 // Function to calculate and output the diagonal degree matrix
 double **ddg(double **A, int n)
 {
-    double *D = malloc(n * sizeof(double));
-
+    // Allocate a 2D array for D
+    double **D = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
-        D[i] = 0.0;
+        D[i] = malloc(n * sizeof(double));
+    }
+
+    // Initialize the array with zeros
+    for (int i = 0; i < n; i++)
+    {
         for (int j = 0; j < n; j++)
         {
-            D[i] += A[i][j];
+            D[i][j] = 0.0;
         }
     }
 
-    return D; // Return the dynamically allocated array
+    // Calculate the diagonal degree values
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            D[i][i] += A[i][j];
+        }
+    }
+
+    return D; // Return the dynamically allocated 2D array
 }
+
 // Allocate memory for a matrix
-double** allocateMatrix(int rows, int cols) {
-    double *matrix = (double *) malloc(rows * sizeof(double *));
-    for (int i = 0; i < rows; ++i) {
-        matrix[i] = (double *) malloc(cols * sizeof(double));
+double **allocateMatrix(int rows, int cols)
+{
+    double *matrix = (double *)malloc(rows * sizeof(double *));
+    for (int i = 0; i < rows; ++i)
+    {
+        matrix[i] = (double *)malloc(cols * sizeof(double));
     }
     return matrix;
 }
 // Calculate the D^-1/2 matrix
-double** computeDHalfInverse(double **D, int n) {
+double **computeDHalfInverse(double **D, int n)
+{
     double **D_half_inv = allocateMatrix(n, n);
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < n; ++j)
+        {
             D_half_inv[i][j] = (i == j) ? 1 / sqrt(D[i][j]) : 0;
         }
     }
     return D_half_inv;
 }
 // Multiply two matrices
-double** matrixMultiply(double **A, double **B, int n) {
+double **matrixMultiply(double **A, double **B, int n)
+{
     double **result = allocateMatrix(n, n);
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < n; ++j)
+        {
             result[i][j] = 0;
-            for (int k = 0; k < n; ++k) {
+            for (int k = 0; k < n; ++k)
+            {
                 result[i][j] += A[i][k] * B[k][j];
             }
         }
     }
     return result;
 }
-// Function to calculate W = D^-1/2 * A * D^-1/2 
-double** norm(double **A, double **D, int n) {
+// Function to calculate W = D^-1/2 * A * D^-1/2
+double **norm(double **A, double **D, int n)
+{
     double **D_half_inv = computeDHalfInverse(D, n);
     double **temp = matrixMultiply(D_half_inv, A, n);
     double **W = matrixMultiply(temp, D_half_inv, n);
 
     // Free allocated memory for intermediate matrices
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
         free(D_half_inv[i]);
         free(temp[i]);
     }
@@ -317,7 +344,6 @@ double** norm(double **A, double **D, int n) {
 
     return W;
 }
-
 
 /*endregion goals functions*/
 

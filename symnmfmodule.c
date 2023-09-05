@@ -228,18 +228,32 @@ double **sym(double **X, int n)
 // Function to calculate and output the diagonal degree matrix
 double **ddg(double **A, int n)
 {
-    double *D = malloc(n * sizeof(double));
-
+    // Allocate a 2D array for D
+    double **D = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
-        D[i] = 0.0;
+        D[i] = malloc(n * sizeof(double));
+    }
+
+    // Initialize the array with zeros
+    for (int i = 0; i < n; i++)
+    {
         for (int j = 0; j < n; j++)
         {
-            D[i] += A[i][j];
+            D[i][j] = 0.0;
         }
     }
 
-    return D; // Return the dynamically allocated array
+    // Calculate the diagonal degree values
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            D[i][i] += A[i][j];
+        }
+    }
+
+    return D; // Return the dynamically allocated 2D array
 }
 
 // Function to calculate and output the normalized similarity matrix
