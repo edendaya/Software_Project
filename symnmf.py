@@ -10,6 +10,8 @@ np.random.seed(0)
 # Functions Area of Code
 
 # Define a function to read the input file
+
+
 def read_file_to_array(file_path):
     data = []
     with open(file_path, 'r') as file:
@@ -18,10 +20,27 @@ def read_file_to_array(file_path):
             data.append(vector)
     return data
 
+# Define a function to calculate the graph Laplacian W
+
+
+def calculate_graph_laplacian(A):
+    # Calculate the degree matrix D
+    D = np.diag(np.sum(A, axis=1))
+
+    # Calculate D^(-1/2)
+    D_sqrt_inv = np.linalg.inv(np.sqrt(D))
+
+    # Calculate the graph Laplacian W
+    W = np.dot(np.dot(D_sqrt_inv, A), D_sqrt_inv)
+
+    return W
+
 # Define functions for various goals
+
+
 def symnmf(k, vectors):
     # Calculate the graph Laplacian W
-    W = symnmf.norm(vectors)
+    W = calculate_graph_laplacian(vectors)
 
     # Calculate the average of all entries of W
     m = np.mean(W)
@@ -36,6 +55,7 @@ def symnmf(k, vectors):
     for row in final_H:
         print(','.join(map(str, row)))
 
+
 def sym(vectors):
     # Call the sym() method from the C extension module
     similarity_matrix = symnmf.sym(vectors)
@@ -43,6 +63,7 @@ def sym(vectors):
     # Output the similarity matrix
     for row in similarity_matrix:
         print(','.join(map(str, row)))
+
 
 def ddg(vectors):
     # Call the ddg() method from the C extension module
@@ -52,6 +73,7 @@ def ddg(vectors):
     for value in diagonal_degree_matrix:
         print(value)
 
+
 def norm(vectors):
     # Call the norm() method from the C extension module
     normalized_similarity_matrix = symnmf.norm(vectors)
@@ -59,11 +81,12 @@ def norm(vectors):
     # Output the normalized similarity matrix
     for row in normalized_similarity_matrix:
         print(','.join(map(str, row)))
-    
+
+
 # Arguments Area of Code
 if len(sys.argv) != 4:
     print("An Error Has Occurred")
-    sys.exit(1)   
+    sys.exit(1)
 k = int(sys.argv[1])
 goal = sys.argv[2]
 file_name = sys.argv[3]
@@ -81,4 +104,3 @@ elif goal == "norm":
 else:
     print("An Error Has Occurred")
     sys.exit(1)
-   
