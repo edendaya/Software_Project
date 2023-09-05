@@ -40,15 +40,10 @@ def calculate_graph_laplacian(A):
 
 def symnmf(k, vectors):
     # Calculate the graph Laplacian W
-<<<<<<< HEAD
     n = len(vectors)
     A = symnmf.sym(vectors, n)
     D = symnmf.ddg(A, n)
     W = symnmf.norm(A, D, n)
-=======
-    W = calculate_graph_laplacian(vectors)
-
->>>>>>> 5ea63d1bbdbaaeec1584236a58b8cb9cd23a75b4
     # Calculate the average of all entries of W
     m = np.mean(W)
 
