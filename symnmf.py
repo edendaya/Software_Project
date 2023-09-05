@@ -18,23 +18,10 @@ def read_file_to_array(file_path):
             data.append(vector)
     return data
 
-# Define a function to calculate the graph Laplacian W
-def calculate_graph_laplacian(A):
-    # Calculate the degree matrix D
-    D = np.diag(np.sum(A, axis=1))
-
-    # Calculate D^(-1/2)
-    D_sqrt_inv = np.linalg.inv(np.sqrt(D))
-
-    # Calculate the graph Laplacian W
-    W = np.dot(np.dot(D_sqrt_inv, A), D_sqrt_inv)
-
-    return W
-
 # Define functions for various goals
 def symnmf(k, vectors):
     # Calculate the graph Laplacian W
-    W = calculate_graph_laplacian(vectors)
+    W = symnmf.norm(vectors)
 
     # Calculate the average of all entries of W
     m = np.mean(W)

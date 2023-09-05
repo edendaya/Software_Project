@@ -201,7 +201,7 @@ double **read_file_to_array(char *filename)
 
 /*region goals functions*/
 // Function to calculate and output the similarity matrix
-void sym(double** X, int n) {
+double** sym(double** X, int n) {
     double** A = malloc(n * sizeof(double*));
     for (int i = 0; i < n; i++) {
         A[i] = malloc(n * sizeof(double));
@@ -219,20 +219,13 @@ void sym(double** X, int n) {
             } else {
                 A[i][j] = 0.0;
             }
-            printf("%.4f ", A[i][j]); // Output the similarity matrix element
         }
-        printf("\n");
     }
-
-    // Free dynamically allocated memory
-    for (int i = 0; i < n; i++) {
-        free(A[i]);
-    }
-    free(A);
+    return A; // Return the dynamically allocated array
 }
 
 // Function to calculate and output the diagonal degree matrix
-void ddg(double** A, int n) {
+double** ddg(double** A, int n) {
     double* D = malloc(n * sizeof(double));
 
     for (int i = 0; i < n; i++) {
@@ -240,15 +233,13 @@ void ddg(double** A, int n) {
         for (int j = 0; j < n; j++) {
             D[i] += A[i][j];
         }
-        printf("%.4f\n", D[i]); // Output the degree value
     }
 
-    // Free dynamically allocated memory
-    free(D);
+    return D; // Return the dynamically allocated array
 }
 
 // Function to calculate and output the normalized similarity matrix
-void norm(double** A, int n) {
+double** norm(double** A, int n) {
     double** W = malloc(n * sizeof(double*));
     for (int i = 0; i < n; i++) {
         W[i] = malloc(n * sizeof(double));
@@ -259,16 +250,9 @@ void norm(double** A, int n) {
             double sqrtDegreeI = sqrt(A[i][i]);
             double sqrtDegreeJ = sqrt(A[j][j]);
             W[i][j] = A[i][j] / (sqrtDegreeI * sqrtDegreeJ);
-            printf("%.4f ", W[i][j]); // Output the normalized similarity matrix element
         }
-        printf("\n");
     }
-
-    // Free dynamically allocated memory
-    for (int i = 0; i < n; i++) {
-        free(W[i]);
-    }
-    free(W);
+    return W; // Return the dynamically allocated array
 }
 /*endregion goals functions*/
 
