@@ -34,11 +34,12 @@ typedef struct
 } Matrix;
 
 /*region EXTERN_AND_CONST_VARS*/
-const int EPSILON = 0.001;
+const int EPSILON = 0.0001;
+const int MAX_ITER = 300;
+const double BETA = 0.5;
 int dimensionOfVector = 0;
 int numberOfVectors = 0;
 int K = 0;
-int iter = 0;
 /*endregion EXTERN_AND_CONST_VARS*/
 
 /*region PROTOTYPE_AREA_OF_CODE*/
@@ -345,8 +346,53 @@ double **norm(double **A, double **D, int n)
     return W;
 }
 double** symnmf(double **H, double **W, int k, int n){
+    // Calculate the Similarity Matrix
+    double **S = sym(H, n);
+    // Calculate the diagonal degree Matrix
+    double **D = ddg(S, n);
+    // Calculate the normalized similarity matrix
+    double **W = norm(S, D, n);
     
+     // Create a new matrix to store the updated values of H
+    double **H_new = malloc(n * sizeof(double *));
+    for (int i = 0; i < n; i++) {
+        H_new[i] = malloc(k * sizeof(double));
+    }
+
+    for (int iter = 0; iter < MAX_ITER; iter++) {
+        double diffNorm = 0.0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < k; j++) {
+                double numerator = 0.0;
+                double denominator = 0.0;
+                for (int l = 0; l < n; l++) {
+                    numerator += W[i][l] * H[l][j];
+                    denominator += H[i][j] * H[i][j] * H[l][j];
+                }
+                H_new[i][j] = H[i][j] * (1 - beta + beta * (numerator / denominator));
+
+                // Calculate the Frobenius norm of the difference between H and H_new
+                diffNorm += pow(H_new[i][j] - H[i][j], 2);
+            }
+        }
+
+        // Check for convergence
+        if (sqrt(diffNorm) < EPSILON) {
+            return H_new;
+        }
+
+        // Update H with H_new for the next iteration
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < k; j++) {
+                H[i][j] = H_new[i][j];
+            }
+        }
+    }
+
+    return H_new;
 }
+
 
 /*endregion goals functions*/
 
