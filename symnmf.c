@@ -317,6 +317,9 @@ double** norm(double **A, double **D, int n) {
 
     return W;
 }
+double** symnmf(double **H, double **W, int k, int n){
+    
+}
 
 
 /*endregion goals functions*/
