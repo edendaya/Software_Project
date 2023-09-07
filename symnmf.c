@@ -330,8 +330,9 @@ double **matrixMultiply(double **A, double **B, int n)
     return result;
 }
 // Function to calculate W = D^-1/2 * A * D^-1/2
-double **norm(double **A, double **D, int n)
+double **norm(double **A, int n)
 {
+    double **D = ddg(A, n);
     double **D_half_inv = computeDHalfInverse(D, n);
     double **temp = matrixMultiply(D_half_inv, A, n);
     double **W = matrixMultiply(temp, D_half_inv, n);
