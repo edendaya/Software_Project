@@ -291,13 +291,14 @@ double **ddg(double **A, int n)
 // Allocate memory for a matrix
 double **allocateMatrix(int rows, int cols)
 {
-    double *matrix = (double *)malloc(rows * sizeof(double *));
+    double **matrix = (double **)malloc(rows * sizeof(double *));
     for (int i = 0; i < rows; ++i)
     {
         matrix[i] = (double *)malloc(cols * sizeof(double));
     }
     return matrix;
 }
+
 // Calculate the D^-1/2 matrix
 double **computeDHalfInverse(double **D, int n)
 {
