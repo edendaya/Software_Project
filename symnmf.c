@@ -4,6 +4,7 @@
 #include <string.h>
 #include "symnmf.h"
 
+
 /*region TYPEDEF_AREA_OF_CODssE*/
 typedef struct Node
 {
@@ -50,7 +51,6 @@ double **ddg(double **A, int n);
 double **norm(double **A, int n);
 
 /*endregion PROTOTYPE_AREA_OF_CODE*/
-
 /*region PUT_INPUT_IN_ARRAY*/
 short didWeGetFirstLine;
 Node *createNode(char data)
@@ -128,7 +128,7 @@ ArrayInfo read_file_to_array(char *filename)
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
-        printf("An Error Has Occurred: Could not open file.\n");
+        printf("An Error Has Occurred");
         exit(1);
     }
 
@@ -354,8 +354,6 @@ double **symnmf(double **H, double **W, int k, int n)
     double **S = sym(H, n);
     // Calculate the diagonal degree Matrix
     double **D = ddg(S, n);
-    // Calculate the normalized similarity matrix
-    double **W = norm(H, n);
 
     // Create a new matrix to store the updated values of H
     double **H_new = malloc(n * sizeof(double *));
@@ -410,6 +408,7 @@ double **symnmf(double **H, double **W, int k, int n)
 /*region MAIN*/
 int main(int argc, char *argv[])
 {
+    printf("Hello, World!\n");
     /* DECLARATION ON VARIABLES */
     double **datapoints;
     char *mode, *input_file_name;
@@ -418,8 +417,8 @@ int main(int argc, char *argv[])
 
     if (argc >= 3)
     {
-        mode = atoi(argv[1]);
-        input_file_name = atoi(argv[2]);
+        mode = argv[1];
+        input_file_name = argv[2];
     }
     ArrayInfo datapointsstruct = read_file_to_array(input_file_name);
     datapoints = datapointsstruct.array;
