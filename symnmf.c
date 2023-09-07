@@ -228,16 +228,18 @@ ArrayInfo read_file_to_array(char *filename)
 // Function to calculate and output the similarity matrix
 double **sym(double **X, int n)
 {
+    printf("Value of n: %d\n", n);
+
     double **A = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
         A[i] = malloc(n * sizeof(double));
     }
-    printf("test");
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
+            printf("i: %d, j: %d\n", i, j);
             if (i != j)
             {
                 double squaredDistance = 0.0;
@@ -245,8 +247,12 @@ double **sym(double **X, int n)
                 {
                     double diff = X[i][d] - X[j][d];
                     squaredDistance += diff * diff;
+                    printf("squaredDistance: %f\n", squaredDistance);
                 }
+                printf("test 1\n");
                 A[i][j] = exp(-squaredDistance / 2);
+                printf("test 2\n");
+                printf("A[%d][%d] = %f\n", i, j, A[i][j]);
             }
             else
             {
