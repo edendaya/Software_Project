@@ -248,8 +248,7 @@ double **sym(double **X, int n)
                     double diff = X[i][d] - X[j][d];
                     squaredDistance += diff * diff;
                 }
-                A[i][j] = exp(-squaredDistance / 2);
-                printf("A[%d][%d] = %f\n", i, j, A[i][j]);
+                A[i][j] = exp(-(squaredDistance / 2));
             }
             else
             {
