@@ -355,7 +355,7 @@ double **symnmf(double **H, double **W, int k, int n)
     // Calculate the diagonal degree Matrix
     double **D = ddg(S, n);
     // Calculate the normalized similarity matrix
-    double **W = norm(S, D, n);
+    double **W = norm(H, n);
 
     // Create a new matrix to store the updated values of H
     double **H_new = malloc(n * sizeof(double *));
@@ -379,7 +379,7 @@ double **symnmf(double **H, double **W, int k, int n)
                     numerator += W[i][l] * H[l][j];
                     denominator += H[i][j] * H[i][j] * H[l][j];
                 }
-                H_new[i][j] = H[i][j] * (1 - beta + beta * (numerator / denominator));
+                H_new[i][j] = H[i][j] * (1 - BETA + BETA * (numerator / denominator));
 
                 // Calculate the Frobenius norm of the difference between H and H_new
                 diffNorm += pow(H_new[i][j] - H[i][j], 2);
