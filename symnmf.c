@@ -58,7 +58,7 @@ Node *createNode(char data)
     Node *newNode = (Node *)malloc(sizeof(Node));
     if (newNode == NULL)
     {
-        printf("An Error Has Occurred");
+        printf("An Error Has Occurred 1");
         exit(1);
     }
     newNode->data = data;
@@ -128,7 +128,7 @@ ArrayInfo read_file_to_array(char *filename)
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
-        printf("An Error Has Occurred");
+        printf("An Error Has Occurred 2");
         exit(1);
     }
 
@@ -166,7 +166,7 @@ ArrayInfo read_file_to_array(char *filename)
     array = malloc(numberOfVectors * sizeof(double *));
     if (array == NULL)
     {
-        printf("An Error Has Occurred");
+        printf("An Error Has Occurred 3");
         exit(1);
     }
     current = allChars.head;
@@ -178,7 +178,7 @@ ArrayInfo read_file_to_array(char *filename)
         array[i] = malloc(dimensionOfVector * sizeof(double));
         if (array[i] == NULL)
         {
-            printf("An Error Has Occurred");
+            printf("An Error Has Occurred 4");
             exit(1);
         }
         for (j = 0; j < dimensionOfVector; j++)
@@ -201,7 +201,7 @@ ArrayInfo read_file_to_array(char *filename)
                 {
                     free(array[k]);
                 }
-                printf("An Error Has Occurred");
+                printf("An Error Has Occurred 5");
                 exit(1);
             }
             for (k = 0; k < wordlength; k++)
@@ -233,7 +233,7 @@ double **sym(double **X, int n)
     {
         A[i] = malloc(n * sizeof(double));
     }
-
+    printf("test");
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
@@ -408,7 +408,6 @@ double **symnmf(double **H, double **W, int k, int n)
 /*region MAIN*/
 int main(int argc, char *argv[])
 {
-    printf("Hello, World!\n");
     /* DECLARATION ON VARIABLES */
     double **datapoints;
     char *mode, *input_file_name;
@@ -442,6 +441,7 @@ int main(int argc, char *argv[])
         printf("An Error Has Occurred: Invalid mode.\n");
         exit(1);
     }
+    
     // print outputmatrix
     for (int i = 0; i < number_datapoints; i++)
     {
