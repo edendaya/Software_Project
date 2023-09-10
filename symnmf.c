@@ -4,52 +4,12 @@
 #include <string.h>
 #include "symnmf.h"
 
-/*region TYPEDEF_AREA_OF_CODssE*/
-typedef struct Node
-{
-    char data;
-    struct Node *prev;
-    struct Node *next;
-} Node;
-
-typedef struct
-{
-    Node *head;
-    Node *tail;
-    int length;
-} LinkedList;
-/*endregion TYPEDEF_AREA_OF_CODE*/
-
-typedef struct
-{
-    double **array;
-    int rows;
-    int cols;
-} ArrayInfo;
-
-typedef struct
-{
-    double **array;
-    int rows;
-    int cols;
-} Matrix;
-
-/*region EXTERN_AND_CONST_VARS*/
-const int EPSILON = 0.0001;
-const int MAX_ITER = 300;
-const double BETA = 0.5;
+/*region VARS*/
 int dimensionOfVector = 0;
 int numberOfVectors = 0;
 int K = 0;
-/*endregion EXTERN_AND_CONST_VARS*/
+/*endregion VARS*/
 
-/*region PROTOTYPE_AREA_OF_CODE*/
-ArrayInfo read_file_to_array(char *filename);
-double **sym(double **X, int n);
-double **ddg(double **A, int n);
-double **norm(double **A, int n);
-
-/*endregion PROTOTYPE_AREA_OF_CODE*/
 /*region PUT_INPUT_IN_ARRAY*/
 short didWeGetFirstLine;
 Node *createNode(char data)
@@ -427,6 +387,7 @@ int main(int argc, char *argv[])
         tempmatrix = sym(datapoints, number_datapoints);
         outputmatrix = norm(tempmatrix, number_datapoints);
     }
+<<<<<<< HEAD
     // else if (strcmp(mode, "symnmf") == 0)
     // {
 
@@ -435,9 +396,11 @@ int main(int argc, char *argv[])
     //     tempmatrix =
     //         outputmatrix = symnmf(datapoints, K, number_datapoints);
     // }
+=======
+>>>>>>> 1d84a8ef4b150959aa91a14525bd27e0d1bb0145
     else
     {
-        printf("An Error Has Occurred: Invalid mode.\n");
+        printf("An Error Has Occurred");
         exit(1);
     }
     // free tempmatrix

@@ -93,19 +93,25 @@ else:
 K = int(K)
 iter = int(iter)
 
-# ALGORITHM STARTS HERE
-for i in range(0, K):
-    centroids.append([vectors[i], []])
-while not convergence(centroids, oldcentroids) and counter < iter:
-    for vector in vectors:
-        putvectorinmatchingcentroid(vector)
-    oldcentroids = copy.deepcopy(centroids)
-    for centroid in centroids:
-        update_centroid(centroid)
-    counter += 1
-    for centroid in centroids:
-        centroid[1] = []
+def kmeans(K, vectors, return_matrix=False):
+    for i in range(0, K):
+        centroids.append([vectors[i], []])
+    while not convergence(centroids, oldcentroids) and counter < iter:
+        for vector in vectors:
+            putvectorinmatchingcentroid(vector)
+        oldcentroids = copy.deepcopy(centroids)
+        for centroid in centroids:
+            update_centroid(centroid)
+        counter += 1
+        for centroid in centroids:
+            centroid[1] = []
 
-print("\n".join([",".join(map(lambda value: "{:.4f}".format(
-    value), centroid[0])) for centroid in centroids]))
-print("")
+    result_matrix = [[round(val, 4) for val in centroid[0]] for centroid in centroids]
+
+    if return_matrix:
+        return result_matrix
+    else:
+        # Print the matrix
+        for row in result_matrix:
+            print(",".join(map(str, row)))
+        print("")
