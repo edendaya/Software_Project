@@ -410,6 +410,7 @@ int main(int argc, char *argv[])
     char *mode, *input_file_name;
     int number_datapoints;
     double **outputmatrix;
+    double **tempmatrix;
 
     if (argc >= 3)
     {
