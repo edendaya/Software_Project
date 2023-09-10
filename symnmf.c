@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symnmf.h"
+#include "symnmf.h"SYMNMF
 
 /*region TYPEDEF_AREA_OF_CODssE*/
 typedef struct Node
@@ -345,20 +345,10 @@ double **norm(double **A, int n)
 
     return W;
 }
-double **symnmf(double **H, double **W, int k, int n)
+
+double **symnmf(double **W, double **H, int n, int k)
 {
-    // Calculate the Similarity Matrix
-    double **S = sym(H, n);
-    // Calculate the diagonal degree Matrix
-    double **D = ddg(S, n);
-
-    // Create a new matrix to store the updated values of H
-    double **H_new = malloc(n * sizeof(double *));
-    for (int i = 0; i < n; i++)
-    {
-        H_new[i] = malloc(k * sizeof(double));
-    }
-
+    // Step 1.4.2: Update H
     for (int iter = 0; iter < MAX_ITER; iter++)
     {
         double diffNorm = 0.0;
@@ -369,35 +359,30 @@ double **symnmf(double **H, double **W, int k, int n)
             {
                 double numerator = 0.0;
                 double denominator = 0.0;
+
                 for (int l = 0; l < n; l++)
                 {
                     numerator += W[i][l] * H[l][j];
                     denominator += H[i][j] * H[i][j] * H[l][j];
                 }
-                H_new[i][j] = H[i][j] * (1 - BETA + BETA * (numerator / denominator));
+
+                double H_new = H[i][j] * (1 - BETA + BETA * (numerator / denominator));
 
                 // Calculate the Frobenius norm of the difference between H and H_new
-                diffNorm += pow(H_new[i][j] - H[i][j], 2);
+                diffNorm += pow(H_new - H[i][j], 2);
+
+                H[i][j] = H_new;
             }
         }
 
         // Check for convergence
         if (sqrt(diffNorm) < EPSILON)
         {
-            return H_new;
-        }
-
-        // Update H with H_new for the next iteration
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < k; j++)
-            {
-                H[i][j] = H_new[i][j];
-            }
+            break;
         }
     }
 
-    return H_new;
+    return H;
 }
 
 /*endregion goals functions*/
@@ -447,9 +432,8 @@ int main(int argc, char *argv[])
 
         K = atoi(argv[3]);
         printf("K = %d\n", K);
-        tempmatrix = sym(datapoints, number_datapoints);
-        tempmatrix = norm(tempmatrix, number_datapoints);
-        outputmatrix = symnmf(datapoints, tempmatrix, K, number_datapoints);
+        tempmatrix =
+        outputmatrix = symnmf(datapoints, K, number_datapoints);
     }
     else
     {
