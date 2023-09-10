@@ -412,6 +412,7 @@ int main(int argc, char *argv[])
     char *mode, *input_file_name;
     int number_datapoints;
     double **outputmatrix;
+    double **tempmatrix;
 
     if (argc >= 3)
     {
@@ -436,7 +437,8 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(mode, "ddg") == 0)
     {
-        outputmatrix = ddg(datapoints, number_datapoints);
+        tempmatrix = sym(datapoints, number_datapoints);
+        outputmatrix = ddg(tempmatrix, number_datapoints);
     }
     else if (strcmp(mode, "norm") == 0)
     {
