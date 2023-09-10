@@ -168,40 +168,69 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
     return py_result;
 }
 
+// Assuming symnmf is defined elsewhere
+ArrayInfo symnmf(double **H, double **W, double *vectors, int k);
+
 static PyObject *py_symnmf(PyObject *self, PyObject *args)
 {
-    PyObject *py_list;
-    int n, k, maxiter;
-    double tol;
+    PyObject *py_list_H, *py_list_W, *py_list_vectors;
+    double **H, **W, *vectors;
+    int k;
 
     // Parse Python arguments
-    if (!PyArg_ParseTuple(args, "Oiiid", &py_list, &n, &k, &maxiter, &tol))
+    if (!PyArg_ParseTuple(args, "OOOOi", &py_list_H, &py_list_W, &py_list_vectors, &k))
     {
         return NULL;
     }
 
-    // Convert Python list to C array
-    double **A = malloc(n * sizeof(double *));
-    for (int i = 0; i < n; i++)
+    // Convert Python list to C array for H
+    int rows_H = PyList_Size(py_list_H);
+    H = malloc(rows_H * sizeof(double *));
+    for (int i = 0; i < rows_H; i++)
     {
-        PyObject *py_row = PyList_GetItem(py_list, i);
-        A[i] = malloc(n * sizeof(double));
-        for (int j = 0; j < n; j++)
+        PyObject *py_row = PyList_GetItem(py_list_H, i);
+        int cols_H = PyList_Size(py_row);
+        H[i] = malloc(cols_H * sizeof(double));
+        for (int j = 0; j < cols_H; j++)
         {
-            PyObject *py_val = PyList_GetItem(py_row, j);
-            A[i][j] = PyFloat_AsDouble(py_val);
+            PyObject *py_value = PyList_GetItem(py_row, j);
+            H[i][j] = PyFloat_AsDouble(py_value);
         }
     }
 
+    // Convert Python list to C array for W
+    int rows_W = PyList_Size(py_list_W);
+    W = malloc(rows_W * sizeof(double *));
+    for (int i = 0; i < rows_W; i++)
+    {
+        PyObject *py_row = PyList_GetItem(py_list_W, i);
+        int cols_W = PyList_Size(py_row);
+        W[i] = malloc(cols_W * sizeof(double));
+        for (int j = 0; j < cols_W; j++)
+        {
+            PyObject *py_value = PyList_GetItem(py_row, j);
+            W[i][j] = PyFloat_AsDouble(py_value);
+        }
+    }
+
+    // Convert Python list to C array for vectors
+    int len_vectors = PyList_Size(py_list_vectors);
+    vectors = malloc(len_vectors * sizeof(double));
+    for (int i = 0; i < len_vectors; i++)
+    {
+        PyObject *py_value = PyList_GetItem(py_list_vectors, i);
+        vectors[i] = PyFloat_AsDouble(py_value);
+    }
+
     // Call C function
-    ArrayInfo result = symnmf(A, n, k, maxiter, tol);
+    ArrayInfo result = symnmf(H, W, vectors, k);
 
     // Convert C array to Python list
-    PyObject *py_result = PyList_New(n);
-    for (int i = 0; i < n; i++)
+    PyObject *py_result = PyList_New(result.rows);
+    for (int i = 0; i < result.rows; i++)
     {
-        PyObject *py_row = PyList_New(n);
-        for (int j = 0; j < n; j++)
+        PyObject *py_row = PyList_New(result.cols);
+        for (int j = 0; j < result.cols; j++)
         {
             PyList_SetItem(py_row, j, PyFloat_FromDouble(result.array[i][j]));
         }
@@ -209,12 +238,15 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
     }
 
     // Free allocated C array and result array
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < result.rows; i++)
     {
-        free(A[i]);
+        free(H[i]);
+        free(W[i]);
         free(result.array[i]);
     }
-    free(A);
+    free(H);
+    free(W);
+    free(vectors);
     free(result.array);
 
     return py_result;

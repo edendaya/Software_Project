@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symnmf.h"SYMNMF
+#include "symnmf.h"
 
 /*region TYPEDEF_AREA_OF_CODssE*/
 typedef struct Node
@@ -392,7 +392,7 @@ int main(int argc, char *argv[])
 {
     /* DECLARATION ON VARIABLES */
     double **datapoints;
-    char *mode, *input_file_name;
+    char *mode, *input_file_name = NULL;
     int number_datapoints;
     double **outputmatrix;
     double **tempmatrix;
@@ -427,14 +427,14 @@ int main(int argc, char *argv[])
         tempmatrix = sym(datapoints, number_datapoints);
         outputmatrix = norm(tempmatrix, number_datapoints);
     }
-    else if (strcmp(mode, "symnmf") == 0)
-    {
+    // else if (strcmp(mode, "symnmf") == 0)
+    // {
 
-        K = atoi(argv[3]);
-        printf("K = %d\n", K);
-        tempmatrix =
-        outputmatrix = symnmf(datapoints, K, number_datapoints);
-    }
+    //     K = atoi(argv[3]);
+    //     printf("K = %d\n", K);
+    //     tempmatrix =
+    //         outputmatrix = symnmf(datapoints, K, number_datapoints);
+    // }
     else
     {
         printf("An Error Has Occurred: Invalid mode.\n");
