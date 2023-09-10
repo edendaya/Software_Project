@@ -220,6 +220,15 @@ ArrayInfo read_file_to_array(char *filename)
     result.array = array;
     result.rows = numberOfVectors;
     result.cols = dimensionOfVector;
+    //print result
+    for (int i = 0; i < numberOfVectors; i++)
+    {
+        for (int j = 0; j < dimensionOfVector; j++)
+        {
+            printf("%.4f ", array[i][j]);
+        }
+        printf("\n");
+    }
     return result;
 }
 /*endregion PUT_INPUT_IN_ARRAY*/
@@ -228,7 +237,6 @@ ArrayInfo read_file_to_array(char *filename)
 // Function to calculate and output the similarity matrix
 double **sym(double **X, int n)
 {
-    printf("Value of n: %d\n", n);
 
     double **A = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
@@ -239,7 +247,6 @@ double **sym(double **X, int n)
     {
         for (int j = 0; j < n; j++)
         {
-            printf("i: %d, j: %d\n", i, j);
             if (i != j)
             {
                 double squaredDistance = 0.0;
