@@ -6,13 +6,6 @@
 #include <string.h>
 #include "symnmf.h"
 
-typedef struct
-{
-    double **array;
-    int rows;
-    int cols;
-} ArrayInfo;
-
 // Python wrapper functions
 static PyObject *py_sym(PyObject *self, PyObject *args)
 {
@@ -169,7 +162,7 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
 }
 
 // Assuming symnmf is defined elsewhere
-ArrayInfo symnmf(double **H, double **W, double *vectors, int k);
+// ArrayInfo symnmf(double **H, double **W, double *vectors, int k);
 
 static PyObject *py_symnmf(PyObject *self, PyObject *args)
 {
@@ -253,25 +246,25 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
 }
 
 // Define the methods that will be available in the Python module
-static PyMethodDef SymNMFMethods[] = {
+static PyMethodDef symnmfC[] = {
     {"sym", py_sym, METH_VARARGS, "Calculate sym"},
     {"ddg", py_ddg, METH_VARARGS, "Calculate ddg"},
     {"norm", py_norm, METH_VARARGS, "Calculate norm"},
-    {"symnmf", py_symnmf, METH_VARARGS, "Calculate symnmf"},
+    {"symnmfC", py_symnmf, METH_VARARGS, "Calculate symnmf"},
     {NULL, NULL, 0, NULL} // Sentinel
 };
 
 // Define the Python module
-static struct PyModuleDef symnmfmodule = {
+static struct PyModuleDef symnmfC = {
     PyModuleDef_HEAD_INIT,
-    "symnmfmodule", // Module name
-    NULL,           // Module documentation (NULL means no documentation)
+    "symnmfC", // Module name
+    NULL,      // Module documentation (NULL means no documentation)
     -1,
-    SymNMFMethods // Methods the module exposes
+    symnmfC // Methods the module exposes
 };
 
 // Initialization function for the module
-PyMODINIT_FUNC PyInit_symnmfmodule(void)
+PyMODINIT_FUNC PyInit_symnmfC(void)
 {
-    return PyModule_Create(&symnmfmodule);
+    return PyModule_Create(&symnmfC);
 }
