@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symnmf.h"SYMNMF
+#include "symnmf.h"
 
 /*region VARS*/
 int dimensionOfVector = 0;
@@ -380,24 +380,34 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(mode, "ddg") == 0)
     {
-        outputmatrix = ddg(datapoints, number_datapoints);
+        tempmatrix = sym(datapoints, number_datapoints);
+        outputmatrix = ddg(tempmatrix, number_datapoints);
+        //free tempmatrix
+        for (int i = 0; i < number_datapoints; i++)
+        {
+            free(tempmatrix[i]);
+        }
     }
     else if (strcmp(mode, "norm") == 0)
     {
         tempmatrix = sym(datapoints, number_datapoints);
         outputmatrix = norm(tempmatrix, number_datapoints);
+        //free tempmatrix
+        for (int i = 0; i < number_datapoints; i++)
+        {
+            free(tempmatrix[i]);
+        }
     }
     else
     {
         printf("An Error Has Occurred");
         exit(1);
     }
-    // free tempmatrix
+    //free datapoints
     for (int i = 0; i < number_datapoints; i++)
     {
-        free(tempmatrix[i]);
+        free(datapoints[i]);
     }
-
     // print outputmatrix
     for (int i = 0; i < number_datapoints; i++)
     {
