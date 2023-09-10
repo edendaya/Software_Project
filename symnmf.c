@@ -352,10 +352,10 @@ int main(int argc, char *argv[])
 {
     /* DECLARATION ON VARIABLES */
     double **datapoints;
-    char *mode, *input_file_name = NULL;
+    char *mode = NULL, *input_file_name = NULL;
     int number_datapoints;
     double **outputmatrix;
-    double **tempmatrix;
+    double **tempmatrix = NULL;
 
     if (argc >= 3)
     {
@@ -387,7 +387,6 @@ int main(int argc, char *argv[])
         tempmatrix = sym(datapoints, number_datapoints);
         outputmatrix = norm(tempmatrix, number_datapoints);
     }
-<<<<<<< HEAD
     // else if (strcmp(mode, "symnmf") == 0)
     // {
 
@@ -396,8 +395,6 @@ int main(int argc, char *argv[])
     //     tempmatrix =
     //         outputmatrix = symnmf(datapoints, K, number_datapoints);
     // }
-=======
->>>>>>> 1d84a8ef4b150959aa91a14525bd27e0d1bb0145
     else
     {
         printf("An Error Has Occurred");
