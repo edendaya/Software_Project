@@ -438,7 +438,8 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(mode, "norm") == 0)
     {
-        outputmatrix = norm(datapoints, number_datapoints);
+        tempmatrix = sym(datapoints, number_datapoints);
+        outputmatrix = norm(tempmatrix, number_datapoints);
     }
     else if (strcmp(mode, "symnmf") == 0)
     {
@@ -452,6 +453,11 @@ int main(int argc, char *argv[])
         printf("An Error Has Occurred: Invalid mode.\n");
         exit(1);
     }
+    // free tempmatrix
+    for (int i = 0; i < number_datapoints; i++)
+    {
+        free(tempmatrix[i]);
+    }
 
     // print outputmatrix
     for (int i = 0; i < number_datapoints; i++)
@@ -463,6 +469,11 @@ int main(int argc, char *argv[])
             printf("%.4f", outputmatrix[i][j]);
         }
         printf("\n");
+    }
+    // free outputmatrix
+    for (int i = 0; i < number_datapoints; i++)
+    {
+        free(outputmatrix[i]);
     }
 }
 
