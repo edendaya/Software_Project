@@ -89,4 +89,5 @@ elif goal == "norm":
     norm(vectors)
 else:
     print("An Error Has Occurred")
+    
     sys.exit(1)
