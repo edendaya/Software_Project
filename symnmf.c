@@ -4,6 +4,7 @@
 #include <string.h>
 #include "symnmf.h"
 
+
 /*region TYPEDEF_AREA_OF_CODssE*/
 typedef struct Node
 {
@@ -219,6 +220,15 @@ ArrayInfo read_file_to_array(char *filename)
     result.array = array;
     result.rows = numberOfVectors;
     result.cols = dimensionOfVector;
+    //print result
+    for (int i = 0; i < numberOfVectors; i++)
+    {
+        for (int j = 0; j < dimensionOfVector; j++)
+        {
+            printf("%.4f ", array[i][j]);
+        }
+        printf("\n");
+    }
     return result;
 }
 /*endregion PUT_INPUT_IN_ARRAY*/
@@ -227,15 +237,7 @@ ArrayInfo read_file_to_array(char *filename)
 // Function to calculate and output the similarity matrix
 double **sym(double **X, int n)
 {
-    // print X
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < dimensionOfVector; j++)
-        {
-            printf("%f ", X[i][j]);
-        }
-        printf("\n");
-    }
+
     double **A = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
@@ -428,6 +430,13 @@ int main(int argc, char *argv[])
     }
     ArrayInfo datapointsstruct = read_file_to_array(input_file_name);
     datapoints = datapointsstruct.array;
+    for (int i = 0; i < datapointsstruct.rows; i++)
+    {
+        for (int j = 0; j < datapointsstruct.cols; j++)
+        {
+            datapoints[i][j] = round(datapoints[i][j] * 10000) / 10000;
+        }
+    }
     number_datapoints = datapointsstruct.rows;
 
     // if mode is equal to sym
@@ -448,7 +457,7 @@ int main(int argc, char *argv[])
         printf("An Error Has Occurred: Invalid mode.\n");
         exit(1);
     }
-
+    
     // print outputmatrix
     for (int i = 0; i < number_datapoints; i++)
     {
