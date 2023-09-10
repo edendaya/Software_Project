@@ -4,7 +4,6 @@
 #include <string.h>
 #include "symnmf.h"
 
-
 /*region TYPEDEF_AREA_OF_CODssE*/
 typedef struct Node
 {
@@ -257,18 +256,15 @@ double **sym(double **X, int n)
 }
 
 // Function to calculate and output the diagonal degree matrix
+
 double **ddg(double **A, int n)
 {
-    // Allocate a 2D array for D
+    // Allocate memory for the degree matrix D
     double **D = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
         D[i] = malloc(n * sizeof(double));
-    }
-
-    // Initialize the array with zeros
-    for (int i = 0; i < n; i++)
-    {
+        // Initialize the row with zeros
         for (int j = 0; j < n; j++)
         {
             D[i][j] = 0.0;
@@ -278,13 +274,15 @@ double **ddg(double **A, int n)
     // Calculate the diagonal degree values
     for (int i = 0; i < n; i++)
     {
+        double degree = 0.0;
         for (int j = 0; j < n; j++)
         {
-            D[i][i] += A[i][j];
+            degree += A[i][j];
         }
+        D[i][i] = degree;
     }
 
-    return D; // Return the dynamically allocated 2D array
+    return D;
 }
 
 // Allocate memory for a matrix
@@ -412,7 +410,6 @@ int main(int argc, char *argv[])
     char *mode, *input_file_name;
     int number_datapoints;
     double **outputmatrix;
-    double **tempmatrix;
 
     if (argc >= 3)
     {
@@ -437,19 +434,25 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(mode, "ddg") == 0)
     {
-        tempmatrix = sym(datapoints, number_datapoints);
-        outputmatrix = ddg(tempmatrix, number_datapoints);
+        outputmatrix = ddg(datapoints, number_datapoints);
     }
     else if (strcmp(mode, "norm") == 0)
     {
         outputmatrix = norm(datapoints, number_datapoints);
+    }
+    else if (strcmp(mode, "symnmf") == 0)
+    {
+
+        K = atoi(argv[3]);
+        printf("K = %d\n", K);
+        outputmatrix = symnmf(datapoints, datapoints, K, number_datapoints);
     }
     else
     {
         printf("An Error Has Occurred: Invalid mode.\n");
         exit(1);
     }
-    
+
     // print outputmatrix
     for (int i = 0; i < number_datapoints; i++)
     {
