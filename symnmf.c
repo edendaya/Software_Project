@@ -352,10 +352,10 @@ int main(int argc, char *argv[])
 {
     /* DECLARATION ON VARIABLES */
     double **datapoints;
-    char *mode, *input_file_name;
+    char *mode = NULL, *input_file_name = NULL;
     int number_datapoints;
     double **outputmatrix;
-    double **tempmatrix;
+    double **tempmatrix = NULL;
 
     if (argc >= 3)
     {
@@ -398,6 +398,14 @@ int main(int argc, char *argv[])
             free(tempmatrix[i]);
         }
     }
+    // else if (strcmp(mode, "symnmf") == 0)
+    // {
+
+    //     K = atoi(argv[3]);
+    //     printf("K = %d\n", K);
+    //     tempmatrix =
+    //         outputmatrix = symnmf(datapoints, K, number_datapoints);
+    // }
     else
     {
         printf("An Error Has Occurred");

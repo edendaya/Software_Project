@@ -1,0 +1,3 @@
+LIBRARY mymodule.cp310-mingw_x86_64.pyd
+EXPORTS
+PyInit_mymodule
