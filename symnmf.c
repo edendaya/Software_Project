@@ -345,31 +345,20 @@ double **norm(double **A, int n)
 
     return W;
 }
-
-double **symnmf(double **W, int n, int k)
+double **symnmf(double **H, double **W, int k, int n)
 {
-    // Step 1.4.1: Initialize H
-    double m = 0.0;
+    // Calculate the Similarity Matrix
+    double **S = sym(H, n);
+    // Calculate the diagonal degree Matrix
+    double **D = ddg(S, n);
+
+    // Create a new matrix to store the updated values of H
+    double **H_new = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
-        {
-            m += W[i][j];
-        }
-    }
-    m /= (n * n);
-
-    double **H = malloc(n * sizeof(double *));
-    for (int i = 0; i < n; i++)
-    {
-        H[i] = malloc(k * sizeof(double));
-        for (int j = 0; j < k; j++)
-        {
-            H[i][j] = ((double)rand() / RAND_MAX) * 2 * sqrt(m / k);
-        }
+        H_new[i] = malloc(k * sizeof(double));
     }
 
-    // Step 1.4.2: Update H
     for (int iter = 0; iter < MAX_ITER; iter++)
     {
         double diffNorm = 0.0;
@@ -380,30 +369,35 @@ double **symnmf(double **W, int n, int k)
             {
                 double numerator = 0.0;
                 double denominator = 0.0;
-
                 for (int l = 0; l < n; l++)
                 {
                     numerator += W[i][l] * H[l][j];
                     denominator += H[i][j] * H[i][j] * H[l][j];
                 }
-
-                double H_new = H[i][j] * (1 - BETA + BETA * (numerator / denominator));
+                H_new[i][j] = H[i][j] * (1 - BETA + BETA * (numerator / denominator));
 
                 // Calculate the Frobenius norm of the difference between H and H_new
-                diffNorm += pow(H_new - H[i][j], 2);
-
-                H[i][j] = H_new;
+                diffNorm += pow(H_new[i][j] - H[i][j], 2);
             }
         }
 
         // Check for convergence
         if (sqrt(diffNorm) < EPSILON)
         {
-            break;
+            return H_new;
+        }
+
+        // Update H with H_new for the next iteration
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < k; j++)
+            {
+                H[i][j] = H_new[i][j];
+            }
         }
     }
 
-    return H;
+    return H_new;
 }
 
 /*endregion goals functions*/
@@ -453,7 +447,9 @@ int main(int argc, char *argv[])
 
         K = atoi(argv[3]);
         printf("K = %d\n", K);
-        outputmatrix = symnmf(datapoints, K, number_datapoints);
+        tempmatrix = sym(datapoints, number_datapoints);
+        tempmatrix = norm(tempmatrix, number_datapoints);
+        outputmatrix = symnmf(datapoints, tempmatrix, K, number_datapoints);
     }
     else
     {
