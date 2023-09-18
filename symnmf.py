@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-import symnmfC as symnmf
+import symnmfC 
 
 # Set the random seed for consistent initialization
 np.random.seed(0)
@@ -23,9 +23,9 @@ def read_file_to_array(file_path):
 def symnmf(k, vectors):
     # Calculate the graph Laplacian W
     n = len(vectors)
-    A = symnmf.sym(vectors, n)
-    D = symnmf.ddg(A, n)
-    W = symnmf.norm(A, D, n)
+    A = symnmfC.sym(vectors, n)
+    D = symnmfC.ddg(A, n)
+    W = symnmfC.norm(A, D, n)
     # Calculate the average of all entries of W
     m = np.mean(W)
 
@@ -33,7 +33,7 @@ def symnmf(k, vectors):
     H = np.random.uniform(0, 2 * np.sqrt(m / k), (len(vectors), k))
 
     # Call the symnmf() method from the C extension module
-    final_H = symnmf.symnmf(H, W, len(H), k)
+    final_H = symnmfC.symnmf(H, W, len(H), k)
     
     if return_H:
         return final_H
