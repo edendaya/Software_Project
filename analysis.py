@@ -2,6 +2,7 @@ import sys
 import copy
 import math
 import numpy as np
+import symnmf
 from sklearn.metrics import silhouette_score, pairwise_distances
 
 #User Args
@@ -74,17 +75,23 @@ while not convergence(centroids, oldcentroids) and counter < iter:
     for centroid in centroids:
         centroid[1] = []
 
-# Call the symnmf function and capture the result
-#symnmf_result = symnmf.symnmf(k, data, True)
-
 cluster_labels_kmeans = []
 for vector in vectors:
     distances = [pairwise_distances(np.array(vector).reshape(1, -1), np.array(centroid[0]).reshape(1, -1))[0][0] for centroid in centroids]
     cluster_labels_kmeans.append(distances.index(min(distances)))
 
 # Calculate silhouette score for K-means
-silhouette_avg_kmeans = silhouette_score(vectors, cluster_labels_kmeans)
+silhouette_kmeans = silhouette_score(vectors, cluster_labels_kmeans)
+
+# Call the symnmf function and capture the result
+H = symnmf.symnmf(k, vectors)
+
+# Derive cluster assignments for each data point based on the maximum association score
+cluster_labels_nmf = np.argmax(H, axis=1)
+
+# Calculate silhouette score for nmf
+silhouette_nmf = silhouette_score(vectors, cluster_labels_nmf)
 # Print the scores
-print("nmf: {:.4f}".format(nmf_score))
-print("kmeans: {:.4f}".format(silhouette_avg_kmeans))
+print("nmf: {:.4f}".format(silhouette_nmf))
+print("kmeans: {:.4f}".format(silhouette_kmeans))
 
