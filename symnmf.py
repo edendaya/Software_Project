@@ -1,8 +1,6 @@
-# symnmf.py
-
 import sys
 import numpy as np
-import symnmf  # Import your C extension module
+import symnmfC as symnmf
 
 # Set the random seed for consistent initialization
 np.random.seed(0)
