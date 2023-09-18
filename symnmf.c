@@ -187,6 +187,16 @@ ArrayInfo read_file_to_array(char *filename)
 // Function to calculate and output the similarity matrix
 double **sym(double **X, int n)
 {
+    printf("sym started \n");
+    printf("printing X input in syn as a matrix");
+    for (int i = 0; i < n; i++)
+    {
+        printf("\n");
+        for (int j = 0; j < dimensionOfVector; j++)
+        {
+            printf("%f ", X[i][j]);
+        }
+    }
     double **A = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
@@ -212,6 +222,7 @@ double **sym(double **X, int n)
             }
         }
     }
+
     return A; // Return the dynamically allocated array
 }
 
@@ -382,7 +393,7 @@ int main(int argc, char *argv[])
     {
         tempmatrix = sym(datapoints, number_datapoints);
         outputmatrix = ddg(tempmatrix, number_datapoints);
-        //free tempmatrix
+        // free tempmatrix
         for (int i = 0; i < number_datapoints; i++)
         {
             free(tempmatrix[i]);
@@ -392,7 +403,7 @@ int main(int argc, char *argv[])
     {
         tempmatrix = sym(datapoints, number_datapoints);
         outputmatrix = norm(tempmatrix, number_datapoints);
-        //free tempmatrix
+        // free tempmatrix
         for (int i = 0; i < number_datapoints; i++)
         {
             free(tempmatrix[i]);
@@ -411,7 +422,7 @@ int main(int argc, char *argv[])
         printf("An Error Has Occurred");
         exit(1);
     }
-    //free datapoints
+    // free datapoints
     for (int i = 0; i < number_datapoints; i++)
     {
         free(datapoints[i]);

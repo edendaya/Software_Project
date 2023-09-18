@@ -43,8 +43,17 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
 
     double **result = sym(X, n); // You'll have to modify your sym function to handle n x m matrices
 
-    // print rsult as a matrix
-
+    printf("printing result as matrix");
+    for (int i = 0; i < n; i++)
+    {
+        PyObject *py_row = PyList_GetItem(py_list, i);
+        for (int j = 0; j < m; j++)
+        {
+            PyObject *py_val = PyList_GetItem(py_row, j);
+            printf("%f ", PyFloat_AsDouble(py_val));
+        }
+        printf("\n");
+    }
     // Convert C array back to Python list
     PyObject *py_result = PyList_New(n);
     for (int i = 0; i < n; i++)
