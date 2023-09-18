@@ -77,7 +77,6 @@ static PyObject *py_ddg(PyObject *self, PyObject *args)
     {
         return NULL;
     }
-
     // Convert Python list to C array
     double **A = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
@@ -175,6 +174,7 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
 
 static PyObject *py_symnmf(PyObject *self, PyObject *args)
 {
+    printf("happend2");
     PyObject *py_list_H, *py_list_W;
     double **H, **W;
     int n, k;
@@ -229,13 +229,13 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
     // Free allocated C array and result array
     for (int i = 0; i < n; i++)
     {
-        free(H[i]);
-        free(W[i]);
-        free(result[i]);
+        //     free(H[i]);
+        //     free(W[i]);
+        //     free(result[i]);
     }
-    free(H);
-    free(W);
-    free(result);
+    // free(H);
+    // free(W);
+    // free(result);
 
     return py_result;
 }
@@ -246,7 +246,7 @@ static PyMethodDef symnmfC_methods[] = {
     {"sym", py_sym, METH_VARARGS, "Calculate sym"},
     {"ddg", py_ddg, METH_VARARGS, "Calculate ddg"},
     {"norm", py_norm, METH_VARARGS, "Calculate norm"},
-    {"symnmfC", py_symnmf, METH_VARARGS, "Calculate symnmf"},
+    {"symnmff", py_symnmf, METH_VARARGS, "Calculate symnmf"},
     {NULL, NULL, 0, NULL} // Sentinel
 };
 

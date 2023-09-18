@@ -308,7 +308,7 @@ double **norm(double **A, int n)
     return W;
 }
 
-double **symnmf(double **W, double **H, int n, int k)
+double **symnmf(double **H, double **W, int n, int k)
 {
     // Step 1.4.2: Update H
     for (int iter = 0; iter < MAX_ITER; iter++)

@@ -26,15 +26,17 @@ def symnmf(k, vectors):
     m = len(vectors[0])
     A = sym(vectors,n, m)
     D = ddg(A, n)
-    W = norm(A, D, n)
+    W = norm(A, n)
     # Calculate the average of all entries of W
-    mean = np.mean(W)
+    meanW = np.mean(W)
 
     # Initialize H as described in 1.4.1
-    H = np.random.uniform(0, 2 * np.sqrt(mean / k), (len(vectors), k))
+    H_np = np.random.uniform(0, 2 * np.sqrt(meanW / k), (len(vectors), k))
+    H = H_np.tolist()
 
     # Call the symnmf() method from the C extension module
-    final_H = symnmfC.symnmf(H, W, len(H), k)
+    print("happend1")
+    final_H=symnmfC.symnmff(H, W, len(W),k)
     
     # Output the final H matrix
     for row in final_H:
@@ -45,30 +47,38 @@ def symnmf(k, vectors):
 def sym(vectors,n, m):
     # Call the sym() method from the C extension module
     similarity_matrix = symnmfC.sym(vectors,n, m)
-    print("started eden stuff")
+    print("sym output")
     for row in similarity_matrix:
         formatted_row = [f"{element:.4f}" for element in row]
         print(",".join(formatted_row))
 
+    return similarity_matrix
 
 
 
-def ddg(vectors, n):
+
+def ddg(A, n):
     # Call the ddg() method from the C extension module
-    diagonal_degree_matrix = symnmfC.ddg(vectors, n)
 
+    diagonal_degree_matrix = symnmfC.ddg(A, n)
+    print("ddg output")
     # Output the diagonal degree matrix
-    for value in diagonal_degree_matrix:
-        print(value)
+    for row in diagonal_degree_matrix:
+        formatted_row = [f"{element:.4f}" for element in row]
+        print(",".join(formatted_row))
+    return diagonal_degree_matrix
 
 
-def norm(vectors):
+def norm(A, n):
     # Call the norm() method from the C extension module
-    normalized_similarity_matrix = symnmfC.norm(vectors)
-
-    # Output the normalized similarity matrix
+    normalized_similarity_matrix = symnmfC.norm(A, n)
+    print("norm output")
+    # Output the diagonal degree matrix
     for row in normalized_similarity_matrix:
-        print(','.join(map(str, row)))
+        formatted_row = [f"{element:.4f}" for element in row]
+        print(",".join(formatted_row))
+    return normalized_similarity_matrix
+
 
 
 # Arguments Area of Code
@@ -80,15 +90,19 @@ goal = sys.argv[2]
 file_name = sys.argv[3]
 
 vectors = read_file_to_array(file_name)  # array of all our vectors
+n = len(vectors)
+m = len(vectors[0])
 
 if goal == "symnmf":
     symnmf(k, vectors)
 elif goal == "sym":
-    sym(vectors)
+    sym(vectors,n,m)
 elif goal == "ddg":
-    ddg(vectors)
+    A = sym(vectors,n,m)
+    ddg(A,n)
 elif goal == "norm":
-    norm(vectors)
+    A = sym(vectors,n,m)
+    norm(A,n)
 else:
     print("An Error Has Occurred")
     
