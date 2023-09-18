@@ -45,15 +45,17 @@ def symnmf(k, vectors):
 def sym(vectors,n, m):
     # Call the sym() method from the C extension module
     similarity_matrix = symnmfC.sym(vectors,n, m)
-    
-    # Output the similarity matrix
+    print("started eden stuff")
     for row in similarity_matrix:
-        print(','.join(map(str, row)))
+        formatted_row = [f"{element:.4f}" for element in row]
+        print(",".join(formatted_row))
 
 
-def ddg(vectors):
+
+
+def ddg(vectors, n):
     # Call the ddg() method from the C extension module
-    diagonal_degree_matrix = symnmfC.ddg(vectors)
+    diagonal_degree_matrix = symnmfC.ddg(vectors, n)
 
     # Output the diagonal degree matrix
     for value in diagonal_degree_matrix:

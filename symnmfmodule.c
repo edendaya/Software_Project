@@ -47,8 +47,8 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
     PyObject *py_result = PyList_New(n);
     for (int i = 0; i < n; i++)
     {
-        PyObject *py_row = PyList_New(m);
-        for (int j = 0; j < m; j++)
+        PyObject *py_row = PyList_New(n);
+        for (int j = 0; j < n; j++)
         {
             PyList_SetItem(py_row, j, PyFloat_FromDouble(result[i][j]));
         }
@@ -64,17 +64,6 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
     free(X);
     free(result);
 
-    // print py_result as matrix
-    for (int i = 0; i < n; i++)
-    {
-        PyObject *py_row = PyList_GetItem(py_result, i);
-        for (int j = 0; j < m; j++)
-        {
-            PyObject *py_val = PyList_GetItem(py_row, j);
-            printf("%f ", PyFloat_AsDouble(py_val));
-        }
-        printf("\n");
-    }
     return py_result;
 }
 

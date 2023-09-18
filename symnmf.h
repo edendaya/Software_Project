@@ -36,7 +36,7 @@ typedef struct
 
 // Function prototypes
 ArrayInfo read_file_to_array(char *filename);
-double **sym(double **X, int n);
+double **sym(double **X, int rows, int cols);
 double **ddg(double **A, int n);
 double **norm(double **A, int n);
 double **symnmf(double **W, double **H, int n, int k);

@@ -214,17 +214,6 @@ double **sym(double **X, int rows, int cols)
         }
     }
 
-    printf("printing A:\n");
-    for (int i = 0; i < n; i++)
-    {
-        printf("row %d: ", i);
-        for (int j = 0; j < n; j++)
-        {
-            printf("%f ", A[i][j]);
-        }
-        printf("\n");
-    }
-
     return A; // Return the dynamically allocated array
 }
 
