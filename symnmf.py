@@ -23,14 +23,15 @@ def read_file_to_array(file_path):
 def symnmf(k, vectors):
     # Calculate the graph Laplacian W
     n = len(vectors)
-    A = sym(vectors,n)
+    m = len(vectors[0])
+    A = sym(vectors,n, m)
     D = ddg(A, n)
     W = norm(A, D, n)
     # Calculate the average of all entries of W
-    m = np.mean(W)
+    mean = np.mean(W)
 
     # Initialize H as described in 1.4.1
-    H = np.random.uniform(0, 2 * np.sqrt(m / k), (len(vectors), k))
+    H = np.random.uniform(0, 2 * np.sqrt(mean / k), (len(vectors), k))
 
     # Call the symnmf() method from the C extension module
     final_H = symnmfC.symnmf(H, W, len(H), k)
@@ -41,9 +42,9 @@ def symnmf(k, vectors):
     
 
 
-def sym(vectors,n):
+def sym(vectors,n, m):
     # Call the sym() method from the C extension module
-    similarity_matrix = symnmfC.sym(vectors,n)
+    similarity_matrix = symnmfC.sym(vectors,n, m)
     
     # Output the similarity matrix
     for row in similarity_matrix:
