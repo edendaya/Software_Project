@@ -23,9 +23,9 @@ def read_file_to_array(file_path):
 def symnmf(k, vectors):
     # Calculate the graph Laplacian W
     n = len(vectors)
-    A = symnmfC.sym(vectors, n)
-    D = symnmfC.ddg(A, n)
-    W = symnmfC.norm(A, D, n)
+    A = sym(vectors,n)
+    D = ddg(A, n)
+    W = norm(A, D, n)
     # Calculate the average of all entries of W
     m = np.mean(W)
 
@@ -41,10 +41,10 @@ def symnmf(k, vectors):
     
 
 
-def sym(vectors):
+def sym(vectors,n):
     # Call the sym() method from the C extension module
-    similarity_matrix = symnmf.sym(vectors)
-
+    similarity_matrix = symnmfC.sym(vectors,n)
+    
     # Output the similarity matrix
     for row in similarity_matrix:
         print(','.join(map(str, row)))
@@ -52,7 +52,7 @@ def sym(vectors):
 
 def ddg(vectors):
     # Call the ddg() method from the C extension module
-    diagonal_degree_matrix = symnmf.ddg(vectors)
+    diagonal_degree_matrix = symnmfC.ddg(vectors)
 
     # Output the diagonal degree matrix
     for value in diagonal_degree_matrix:
@@ -61,7 +61,7 @@ def ddg(vectors):
 
 def norm(vectors):
     # Call the norm() method from the C extension module
-    normalized_similarity_matrix = symnmf.norm(vectors)
+    normalized_similarity_matrix = symnmfC.norm(vectors)
 
     # Output the normalized similarity matrix
     for row in normalized_similarity_matrix:

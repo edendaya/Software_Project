@@ -10,36 +10,47 @@
 static PyObject *py_sym(PyObject *self, PyObject *args)
 {
     PyObject *py_list;
-    int n;
+    int n, m;
 
-    // Parse Python arguments
+    // Parse Python arguments. We're only getting n here.
     if (!PyArg_ParseTuple(args, "Oi", &py_list, &n))
     {
         return NULL;
     }
+
+    // Determine m based on the first row (assuming all rows have the same length)
+    m = PyList_Size(PyList_GetItem(py_list, 0));
 
     // Convert Python list to C array
     double **X = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
         PyObject *py_row = PyList_GetItem(py_list, i);
-        X[i] = malloc(n * sizeof(double));
-        for (int j = 0; j < n; j++)
+        X[i] = malloc(m * sizeof(double));
+        for (int j = 0; j < m; j++)
         {
             PyObject *py_val = PyList_GetItem(py_row, j);
+            if (!py_val)
+            {
+                printf("Failed to get value at (%d, %d)\n", i, j);
+                return NULL;
+            }
             X[i][j] = PyFloat_AsDouble(py_val);
         }
     }
 
     // Call C function
-    double **result = sym(X, n);
 
-    // Convert C array to Python list
+    double **result = sym(X, n); // You'll have to modify your sym function to handle n x m matrices
+
+    // print rsult as a matrix
+
+    // Convert C array back to Python list
     PyObject *py_result = PyList_New(n);
     for (int i = 0; i < n; i++)
     {
-        PyObject *py_row = PyList_New(n);
-        for (int j = 0; j < n; j++)
+        PyObject *py_row = PyList_New(m);
+        for (int j = 0; j < m; j++)
         {
             PyList_SetItem(py_row, j, PyFloat_FromDouble(result[i][j]));
         }
@@ -55,6 +66,17 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
     free(X);
     free(result);
 
+    // print py_result as matrix
+    for (int i = 0; i < n; i++)
+    {
+        PyObject *py_row = PyList_GetItem(py_result, i);
+        for (int j = 0; j < m; j++)
+        {
+            PyObject *py_val = PyList_GetItem(py_row, j);
+            printf("%f ", PyFloat_AsDouble(py_val));
+        }
+        printf("\n");
+    }
     return py_result;
 }
 
