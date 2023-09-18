@@ -185,31 +185,22 @@ ArrayInfo read_file_to_array(char *filename)
 
 /*region goals functions*/
 // Function to calculate and output the similarity matrix
-double **sym(double **X, int n)
+double **sym(double **X, int rows, int cols)
 {
-    printf("sym started \n");
-    printf("printing X input in syn as a matrix");
-    for (int i = 0; i < n; i++)
+
+    double **A = malloc(rows * sizeof(double *));
+    for (int i = 0; i < rows; i++)
     {
-        printf("\n");
-        for (int j = 0; j < dimensionOfVector; j++)
-        {
-            printf("%f ", X[i][j]);
-        }
+        A[i] = malloc(rows * sizeof(double));
     }
-    double **A = malloc(n * sizeof(double *));
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < rows; i++)
     {
-        A[i] = malloc(n * sizeof(double));
-    }
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < rows; j++)
         {
             if (i != j)
             {
                 double squaredDistance = 0.0;
-                for (int d = 0; d < dimensionOfVector; d++)
+                for (int d = 0; d < cols; d++)
                 {
                     double diff = X[i][d] - X[j][d];
                     squaredDistance += diff * diff;
@@ -221,6 +212,17 @@ double **sym(double **X, int n)
                 A[i][j] = 0.0;
             }
         }
+    }
+
+    printf("printing A:\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("row %d: ", i);
+        for (int j = 0; j < n; j++)
+        {
+            printf("%f ", A[i][j]);
+        }
+        printf("\n");
     }
 
     return A; // Return the dynamically allocated array
@@ -387,11 +389,11 @@ int main(int argc, char *argv[])
     // if mode is equal to sym
     if (strcmp(mode, "sym") == 0)
     {
-        outputmatrix = sym(datapoints, number_datapoints);
+        outputmatrix = sym(datapoints, number_datapoints, dimensionOfVector);
     }
     else if (strcmp(mode, "ddg") == 0)
     {
-        tempmatrix = sym(datapoints, number_datapoints);
+        tempmatrix = sym(datapoints, number_datapoints, dimensionOfVector);
         outputmatrix = ddg(tempmatrix, number_datapoints);
         // free tempmatrix
         for (int i = 0; i < number_datapoints; i++)
@@ -401,7 +403,7 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(mode, "norm") == 0)
     {
-        tempmatrix = sym(datapoints, number_datapoints);
+        tempmatrix = sym(datapoints, number_datapoints, dimensionOfVector);
         outputmatrix = norm(tempmatrix, number_datapoints);
         // free tempmatrix
         for (int i = 0; i < number_datapoints; i++)
