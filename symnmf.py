@@ -20,7 +20,7 @@ def read_file_to_array(file_path):
 
 
 # Define functions for various goals
-def symnmf(k, vectors, return_H=False):
+def symnmf(k, vectors):
     # Calculate the graph Laplacian W
     n = len(vectors)
     A = symnmf.sym(vectors, n)
@@ -33,7 +33,7 @@ def symnmf(k, vectors, return_H=False):
     H = np.random.uniform(0, 2 * np.sqrt(m / k), (len(vectors), k))
 
     # Call the symnmf() method from the C extension module
-    final_H = symnmf.symnmf(H, W, vectors, k)
+    final_H = symnmf.symnmf(H, W, len(H), k)
     
     if return_H:
         return final_H
