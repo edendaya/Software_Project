@@ -6,10 +6,10 @@
 
 To run python on vscode press "F5"- NOT the green arrow on the top right
 
-##compile on nova:
+## compile on nova:
 python3 setup.py build_ext --inplace
 
-##run on nova:
+## run on nova:
 python3 symnmf.py 3 symnmf ./olddata/tests/input_1.txt
 
 # TheSoftwareProject
