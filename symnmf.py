@@ -35,9 +35,6 @@ def symnmf(k, vectors):
     # Call the symnmf() method from the C extension module
     final_H = symnmf.symnmf(H, W, len(H), k)
     
-    if return_H:
-        return final_H
-    
     # Output the final H matrix
     for row in final_H:
         print(','.join(map(str, row)))
