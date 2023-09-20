@@ -184,17 +184,6 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    printf("py_list_H:");
-    for (int i = 0; i < n; i++)
-    {
-        PyObject *py_row = PyList_GetItem(py_list_H, i);
-        for (int j = 0; j < k; j++)
-        {
-            PyObject *py_value = PyList_GetItem(py_row, j);
-            printf("%f ", PyFloat_AsDouble(py_value));
-        }
-        printf("\n");
-    }
     // Convert Python list to C array for H
     H = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
@@ -236,7 +225,6 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
         PyList_SetItem(py_result, i, py_row);
     }
 
-    printf("the code works until here\n");
     return py_result;
 }
 
