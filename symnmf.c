@@ -310,6 +310,31 @@ double **norm(double **A, int n)
 
 double **symnmf(double **H, double **W, int n, int k)
 {
+
+    printf("cW:");
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (j != 0)
+                printf(",");
+            printf("%.4f", W[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("cH:");
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < k; j++)
+        {
+            if (j != 0)
+                printf(",");
+            printf("%.4f", H[i][j]);
+        }
+        printf("\n");
+    }
+
     // Step 1.4.2: Update H
     for (int iter = 0; iter < MAX_ITER; iter++)
     {
@@ -352,6 +377,7 @@ double **symnmf(double **H, double **W, int n, int k)
 /*region MAIN*/
 int main(int argc, char *argv[])
 {
+
     /* DECLARATION ON VARIABLES */
     double **datapoints;
     char *mode = NULL, *input_file_name = NULL;

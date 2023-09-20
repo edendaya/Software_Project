@@ -174,7 +174,6 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
 
 static PyObject *py_symnmf(PyObject *self, PyObject *args)
 {
-    printf("happend2");
     PyObject *py_list_H, *py_list_W;
     double **H, **W;
     int n, k;
@@ -185,13 +184,24 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
         return NULL;
     }
 
+    printf("py_list_H:");
+    for (int i = 0; i < n; i++)
+    {
+        PyObject *py_row = PyList_GetItem(py_list_H, i);
+        for (int j = 0; j < k; j++)
+        {
+            PyObject *py_value = PyList_GetItem(py_row, j);
+            printf("%f ", PyFloat_AsDouble(py_value));
+        }
+        printf("\n");
+    }
     // Convert Python list to C array for H
     H = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
         PyObject *py_row = PyList_GetItem(py_list_H, i);
-        H[i] = malloc(n * sizeof(double));
-        for (int j = 0; j < n; j++)
+        H[i] = malloc(k * sizeof(double));
+        for (int j = 0; j < k; j++)
         {
             PyObject *py_value = PyList_GetItem(py_row, j);
             H[i][j] = PyFloat_AsDouble(py_value);
@@ -226,17 +236,7 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
         PyList_SetItem(py_result, i, py_row);
     }
 
-    // Free allocated C array and result array
-    for (int i = 0; i < n; i++)
-    {
-        //     free(H[i]);
-        //     free(W[i]);
-        //     free(result[i]);
-    }
-    // free(H);
-    // free(W);
-    // free(result);
-
+    printf("the code works until here\n");
     return py_result;
 }
 

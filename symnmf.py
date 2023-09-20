@@ -35,12 +35,15 @@ def symnmf(k, vectors):
     H = H_np.tolist()
 
     # Call the symnmf() method from the C extension module
-    print("happend1")
+    
     final_H=symnmfC.symnmff(H, W, len(W),k)
+
     
     # Output the final H matrix
+    print("symnmf output")
     for row in final_H:
-        print(','.join(map(str, row)))
+        formatted_row = [f"{element:.4f}" for element in row]
+        print(",".join(formatted_row))
     
 
 
