@@ -310,11 +310,15 @@ double **norm(double **A, int n)
 
 double **symnmf(double **H, double **W, int n, int k)
 {
+    // Allocate space for the new H matrix
+    double **new_H = allocateMatrix(n, k);
+
     // Step 1.4.2: Update H
     for (int iter = 0; iter < MAX_ITER; iter++)
     {
         double diffNorm = 0.0;
 
+        // Update new_H based on current H
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < k; j++)
@@ -323,7 +327,7 @@ double **symnmf(double **H, double **W, int n, int k)
                 double denominator = 0.0;
 
                 // Calculate (WH)ij
-                for (int l = 0; l < n; l++) // Make sure to loop over n here
+                for (int l = 0; l < n; l++)
                 {
                     numerator += W[i][l] * H[l][j];
                 }
@@ -339,21 +343,33 @@ double **symnmf(double **H, double **W, int n, int k)
                     denominator += sum_inner * H[l][j];
                 }
 
-                double H_new = H[i][j] * (1 - BETA + BETA * (numerator / (denominator))); // Add EPSILON to prevent division by zero
+                new_H[i][j] = H[i][j] * (1 - BETA + BETA * (numerator / (denominator))); // Add EPSILON to prevent division by zero
+            }
+        }
 
-                // Calculate the Frobenius norm of the difference between H and H_new
-                diffNorm += pow(H_new - H[i][j], 2);
-
-                H[i][j] = H_new;
+        // Calculate the Frobenius norm of the difference between H and new_H
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < k; j++)
+            {
+                diffNorm += pow(new_H[i][j] - H[i][j], 2);
+                H[i][j] = new_H[i][j]; // Update H matrix
             }
         }
 
         // Check for convergence
-        if (sqrt(diffNorm) < EPSILON)
+        if (diffNorm < EPSILON)
         {
             break;
         }
     }
+
+    for (int i = 0; i < n; i++)
+    {
+        free(new_H[i]);
+    }
+    free(new_H);
+
     return H;
 }
 
