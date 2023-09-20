@@ -377,13 +377,7 @@ int main(int argc, char *argv[])
     }
     ArrayInfo datapointsstruct = read_file_to_array(input_file_name);
     datapoints = datapointsstruct.array;
-    for (int i = 0; i < datapointsstruct.rows; i++)
-    {
-        for (int j = 0; j < datapointsstruct.cols; j++)
-        {
-            datapoints[i][j] = round(datapoints[i][j] * 10000) / 10000;
-        }
-    }
+
     number_datapoints = datapointsstruct.rows;
 
     // if mode is equal to sym
