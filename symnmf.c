@@ -310,8 +310,7 @@ double **norm(double **A, int n)
 
 double **symnmf(double **H, double **W, int n, int k)
 {
-
-       // Step 1.4.2: Update H
+    // Step 1.4.2: Update H
     for (int iter = 0; iter < MAX_ITER; iter++)
     {
         double diffNorm = 0.0;
@@ -323,13 +322,24 @@ double **symnmf(double **H, double **W, int n, int k)
                 double numerator = 0.0;
                 double denominator = 0.0;
 
-                for (int l = 0; l < n; l++)
+                // Calculate (WH)ij
+                for (int l = 0; l < n; l++) // Make sure to loop over n here
                 {
                     numerator += W[i][l] * H[l][j];
-                    denominator += H[i][j] * H[i][j] * H[l][j];
                 }
 
-                double H_new = H[i][j] * (1 - BETA + BETA * (numerator / denominator));
+                // Calculate (H(H^T)H)ij
+                for (int l = 0; l < n; l++)
+                {
+                    double sum_inner = 0.0;
+                    for (int m = 0; m < k; m++)
+                    {
+                        sum_inner += H[i][m] * H[l][m];
+                    }
+                    denominator += sum_inner * H[l][j];
+                }
+
+                double H_new = H[i][j] * (1 - BETA + BETA * (numerator / (denominator))); // Add EPSILON to prevent division by zero
 
                 // Calculate the Frobenius norm of the difference between H and H_new
                 diffNorm += pow(H_new - H[i][j], 2);
@@ -345,7 +355,6 @@ double **symnmf(double **H, double **W, int n, int k)
         }
     }
     return H;
-  
 }
 
 /*endregion goals functions*/
