@@ -344,8 +344,8 @@ double **symnmf(double **H, double **W, int n, int k)
             break;
         }
     }
-
     return H;
+  
 }
 
 /*endregion goals functions*/

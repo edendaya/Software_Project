@@ -217,8 +217,8 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
     PyObject *py_result = PyList_New(n);
     for (int i = 0; i < n; i++)
     {
-        PyObject *py_row = PyList_New(n);
-        for (int j = 0; j < n; j++)
+        PyObject *py_row = PyList_New(k);
+        for (int j = 0; j < k; j++)
         {
             PyList_SetItem(py_row, j, PyFloat_FromDouble(result[i][j]));
         }
