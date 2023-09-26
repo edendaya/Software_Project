@@ -1,26 +1,28 @@
-# Makefile for building symnmfC Python extension module
+# Makefile for symnmf
 
 # Compiler and flags
 CC = gcc
 CFLAGS = -ansi -Wall -Wextra -Werror -pedantic-errors
-# Python includes and library
-PYTHON_INCLUDE = $(shell python3-config --cflags)
-PYTHON_LIB = $(shell python3-config --ldflags)
 
-# Extension module sources
-SRC = symnmf.c symnmfmodule.c
-# Extension module name
-EXT_MODULE = symnmfC
+# Source files
+SRCS = symnmf.c symnmfmodule.c
 
-# Build target
-all: $(EXT_MODULE).so
+# Object files
+OBJS = $(SRCS:.c=.o)
 
-# Compile the extension module
-$(EXT_MODULE).so: $(SRC)
-	$(CC) $(CFLAGS) $(PYTHON_INCLUDE) -shared -o $@ $(SRC) $(PYTHON_LIB)
+# Executable name
+EXEC = symnmf
 
-# Clean the generated files
+# Build rule
+$(EXEC): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) -lm -lpython3.x  # Replace '3.x' with your Python version
+
+# Dependency generation
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Clean rule
 clean:
-	rm -f $(EXT_MODULE).so
+	rm -f $(OBJS) $(EXEC)
 
-.PHONY: all clean
+.PHONY: clean

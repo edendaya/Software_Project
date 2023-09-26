@@ -1,6 +1,12 @@
 #ifndef SYM_NMF_H
 #define SYM_NMF_H
 
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <Python.h>
+
 /* Define constants */
 #define EPSILON 0.0001
 #define MAX_ITER 300
