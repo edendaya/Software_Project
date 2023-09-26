@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -ansi -Wall -Wextra -Werror -pedantic-errors
 
 # Source files
-SRCS = symnmf.c main.c  
+SRCS = symnmf.c
 
 # Object files
 OBJS = $(SRCS:.c=.o)
@@ -15,7 +15,7 @@ EXEC = symnmf
 
 # Build rule
 $(EXEC): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) -lm
 
 # Dependency generation
 %.o: %.c
