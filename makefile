@@ -1,28 +1,17 @@
-# Makefile for symnmf
-
-# Compiler and flags
 CC = gcc
-CFLAGS = -ansi -Wall -Wextra -Werror -pedantic-errors
+CFLAGS = -ansi -Wall -Wextra -Werror -pedantic-errors -fPIC -I/usr/include/python3.6m/
+LDFLAGS = -lm -shared
+TARGET = symnmf
+SHARED_OBJECT = symnmfC.so
+SOURCES = symnmf.c 
 
-# Source files
-SRCS = symnmf.c symnmfmodule.c
+all: $(TARGET) $(SHARED_OBJECT)
 
-# Object files
-OBJS = $(SRCS:.c=.o)
+$(TARGET): $(SOURCES)
+	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET) $(LDFLAGS)
 
-# Executable name
-EXEC = symnmf
+$(SHARED_OBJECT): $(SOURCES)
+	$(CC) $(CFLAGS) -shared $(SOURCES) -o $(SHARED_OBJECT) $(LDFLAGS)
 
-# Build rule
-$(EXEC): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) -lm -lpython3.x  # Replace '3.x' with your Python version
-
-# Dependency generation
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-# Clean rule
 clean:
-	rm -f $(OBJS) $(EXEC)
-
-.PHONY: clean
+	rm -f $(TARGET) $(SHARED_OBJECT)

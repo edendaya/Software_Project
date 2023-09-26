@@ -5,7 +5,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <Python.h>
 
 /* Define constants */
 #define EPSILON 0.0001
