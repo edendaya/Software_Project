@@ -367,7 +367,7 @@ double **symnmf(double **H, double **W, int n, int k)
     {
         free(new_H[i]);
     }
-    free(new_H);
+    //free(new_H);
 
     return H;
 }

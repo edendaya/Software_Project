@@ -18,4 +18,7 @@ python3 symnmf.py 3 symnmf ./olddata/tests/input_1.txt
 
 rm ./build/lib.linux-x86_64-3.6/symnmfC.cpython-36m-x86_64-linux-gnu.so ; python3 setup.py build_ext --inplace ; python3 symnmf.py 3 symnmf ./olddata/tests/input_1.txt
 
+## compile c file
+gcc -o symnmf symnmf.c -lm
+
 # TheSoftwareProject
