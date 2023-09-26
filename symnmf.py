@@ -30,48 +30,24 @@ def symnmf(k, vectors):
     # Call the symnmf() method from the C extension module
     final_H=symnmfC.symnmff(H, W, len(W),k)
 
-    # Output the final H matrix
-    print("symnmf output")
-    for row in final_H:
-        formatted_row = [f"{element:.4f}" for element in row]
-        print(",".join(formatted_row))
-    
-
+    return final_H 
 
 def sym(vectors,n, m):
     # Call the sym() method from the C extension module
     similarity_matrix = symnmfC.sym(vectors,n, m)
-    print("sym output")
-    for row in similarity_matrix:
-        formatted_row = [f"{element:.4f}" for element in row]
-        print(",".join(formatted_row))
-
     return similarity_matrix
-
-
 
 
 def ddg(A, n):
     # Call the ddg() method from the C extension module
     diagonal_degree_matrix = symnmfC.ddg(A, n)
-    print("ddg output")
-    # Output the diagonal degree matrix
-    for row in diagonal_degree_matrix:
-        formatted_row = [f"{element:.4f}" for element in row]
-        print(",".join(formatted_row))
     return diagonal_degree_matrix
 
 
 def norm(A, n):
     # Call the norm() method from the C extension module
     normalized_similarity_matrix = symnmfC.norm(A, n)
-    print("norm output")
-    # Output the diagonal degree matrix
-    for row in normalized_similarity_matrix:
-        formatted_row = [f"{element:.4f}" for element in row]
-        print(",".join(formatted_row))
     return normalized_similarity_matrix
-
 
 
 # Arguments Area of Code
@@ -87,16 +63,20 @@ n = len(vectors)
 m = len(vectors[0])
 
 if goal == "symnmf":
-    symnmf(k, vectors)
+    output_matrix = symnmf(k, vectors)
 elif goal == "sym":
-    sym(vectors,n,m)
+    output_matrix = sym(vectors,n,m)
 elif goal == "ddg":
     A = sym(vectors,n,m)
-    ddg(A,n)
+    output_matrix = ddg(A,n)
 elif goal == "norm":
     A = sym(vectors,n,m)
-    norm(A,n)
+    output_matrix = norm(A,n)
 else:
-    print("An Error Has Occurred")
-    
+    print("An Error Has Occurred") 
     sys.exit(1)
+    
+#Prints the output matrix
+for row in output_matrix:
+        formatted_row = [f"{element:.4f}" for element in row]
+        print(",".join(formatted_row))
