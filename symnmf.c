@@ -82,6 +82,7 @@ void printList(LinkedList *list)
     current = list->tail;
 }
 
+// function to read the file and put the input in an array
 ArrayInfo read_file_to_array(char *filename)
 {
     FILE *file = fopen(filename, "r");
@@ -104,7 +105,8 @@ ArrayInfo read_file_to_array(char *filename)
     numberOfVectors = 0;
     didWeGetFirstLine = 0;
 
-    while ((ch = fgetc(file)) != EOF) // Changed getchar() to fgetc(file)
+    // read the file and put the input in an array
+    while ((ch = fgetc(file)) != EOF)
     {
         if (ch == ',' && didWeGetFirstLine == 0)
         {
@@ -150,8 +152,6 @@ ArrayInfo read_file_to_array(char *filename)
                 wordlength++;
             }
             current = current->next;
-
-            /* wordStart; */
 
             word = malloc((wordlength + 1) * sizeof(char));
             if (word == NULL)
@@ -214,14 +214,13 @@ double **sym(double **X, int rows, int cols)
         }
     }
 
-    return A; // Return the dynamically allocated array
+    return A;
 }
 
 // Function to calculate and output the diagonal degree matrix
 
 double **ddg(double **A, int n)
 {
-    // Allocate memory for the degree matrix D
     double **D = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
@@ -343,11 +342,11 @@ double **symnmf(double **H, double **W, int n, int k)
                     denominator += sum_inner * H[l][j];
                 }
 
-                new_H[i][j] = H[i][j] * (1 - BETA + BETA * (numerator / (denominator))); // Add EPSILON to prevent division by zero
+                new_H[i][j] = H[i][j] * (1 - BETA + BETA * (numerator / (denominator)));
             }
         }
 
-        // Calculate the Frobenius norm of the difference between H and new_H
+        // Calculate the norm of the difference between H and new_H
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < k; j++)
@@ -421,14 +420,6 @@ int main(int argc, char *argv[])
             free(tempmatrix[i]);
         }
     }
-    // else if (strcmp(mode, "symnmf") == 0)
-    // {
-
-    //     K = atoi(argv[3]);
-    //     printf("K = %d\n", K);
-    //     tempmatrix =
-    //         outputmatrix = symnmf(datapoints, K, number_datapoints);
-    // }
     else
     {
         printf("An Error Has Occurred");

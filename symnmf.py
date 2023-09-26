@@ -5,10 +5,6 @@ import symnmfC
 # Set the random seed for consistent initialization
 np.random.seed(0)
 
-# Functions Area of Code
-
-# Define a function to read the input file
-
 
 def read_file_to_array(file_path):
     data = []
@@ -19,15 +15,12 @@ def read_file_to_array(file_path):
     return data
 
 
-# Define functions for various goals
 def symnmf(k, vectors):
-    # Calculate the graph Laplacian W
     n = len(vectors)
     m = len(vectors[0])
     A = sym(vectors,n, m)
     D = ddg(A, n)
     W = norm(A, n)
-    # Calculate the average of all entries of W
     meanW = np.mean(W)
 
     # Initialize H as described in 1.4.1
@@ -35,10 +28,8 @@ def symnmf(k, vectors):
     H = H_np.tolist()
 
     # Call the symnmf() method from the C extension module
-    
     final_H=symnmfC.symnmff(H, W, len(W),k)
 
-    
     # Output the final H matrix
     print("symnmf output")
     for row in final_H:
@@ -62,7 +53,6 @@ def sym(vectors,n, m):
 
 def ddg(A, n):
     # Call the ddg() method from the C extension module
-
     diagonal_degree_matrix = symnmfC.ddg(A, n)
     print("ddg output")
     # Output the diagonal degree matrix

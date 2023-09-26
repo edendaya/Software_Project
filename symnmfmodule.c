@@ -12,7 +12,7 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
     PyObject *py_list;
     int n, m;
 
-    // Parse Python arguments. We're only getting n here.
+    // Parse Python arguments.
     if (!PyArg_ParseTuple(args, "Oii", &py_list, &n, &m))
     {
         return NULL;
@@ -36,9 +36,7 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
         }
     }
 
-    // Call C function
-
-    double **result = sym(X, n, m); // You'll have to modify your sym function to handle n x m matrices
+    double **result = sym(X, n, m);
 
     // Convert C array back to Python list
     PyObject *py_result = PyList_New(n);
@@ -74,6 +72,7 @@ static PyObject *py_ddg(PyObject *self, PyObject *args)
     {
         return NULL;
     }
+
     // Convert Python list to C array
     double **A = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
@@ -87,7 +86,7 @@ static PyObject *py_ddg(PyObject *self, PyObject *args)
         }
     }
 
-    // Call C function
+    // Call C function ddg
     double **result = ddg(A, n);
 
     // Convert C array to Python list
@@ -139,7 +138,7 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
         }
     }
 
-    // Call C function
+    // Call C function norm
     double **result = norm(A, n);
 
     // Convert C array to Python list
@@ -165,9 +164,6 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
 
     return py_result;
 }
-
-// Assuming symnmf is defined elsewhere
-// ArrayInfo symnmf(double **H, double **W, double *vectors, int k);
 
 static PyObject *py_symnmf(PyObject *self, PyObject *args)
 {
@@ -226,7 +222,6 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
 }
 
 // Define the methods that will be available in the Python module
-// Define the Python module
 static PyMethodDef symnmfC_methods[] = {
     {"sym", py_sym, METH_VARARGS, "Calculate sym"},
     {"ddg", py_ddg, METH_VARARGS, "Calculate ddg"},

@@ -41,4 +41,4 @@ double **ddg(double **A, int n);
 double **norm(double **A, int n);
 double **symnmf(double **H, double **W, int n, int k);
 
-#endif /* SYM_NMF_H */
+#endif
