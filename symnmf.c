@@ -182,7 +182,6 @@ ArrayInfo read_file_to_array(char *filename)
 // Function to calculate and output the similarity matrix
 double **sym(double **X, int rows, int cols)
 {
-
     double **A = allocateMatrix(rows, rows);
     for (int i = 0; i < rows; i++)
     {

@@ -21,7 +21,6 @@ def symnmf(k, vectors):
     n = len(vectors)
     m = len(vectors[0])
     A = sym(vectors, n, m)
-    D = ddg(A, n)
     W = norm(A, n)
     meanW = np.mean(W)
 

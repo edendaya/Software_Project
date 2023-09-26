@@ -10,12 +10,12 @@ k = int(sys.argv[1])
 file_name = sys.argv[2]
 
 #define variables for KMenas
+EPSILON = 0.0001
+ITER = 300
 centroids = []
 vectors = []
 counter = 0
 oldcentroids = []
-EPSILON = 0.0001
-iter = 300
 
 def read_data(file_name):
     with open(file_name, 'r') as file:
@@ -65,7 +65,7 @@ def update_centroid(centroid):
 # K-means Algorithm
 for i in range(0, k):
     centroids.append([vectors[i], []])
-while not convergence(centroids, oldcentroids) and counter < iter:
+while not convergence(centroids, oldcentroids) and counter < ITER:
     for vector in vectors:
         putvectorinmatchingcentroid(vector)
     oldcentroids = copy.deepcopy(centroids)
@@ -84,6 +84,7 @@ for vector in vectors:
 silhouette_kmeans = silhouette_score(vectors, cluster_labels_kmeans)
 
 # Call the symnmf function and capture the result
+vectors = vectors.tolist()
 H = symnmf.symnmf(k, vectors)
 
 # Derive cluster assignments for each data point based on the maximum association score

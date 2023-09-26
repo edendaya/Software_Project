@@ -6,6 +6,8 @@
 #include <string.h>
 #include "symnmf.h"
 
+printf("test");
+
 // Python wrapper functions
 static PyObject *py_sym(PyObject *self, PyObject *args)
 {
