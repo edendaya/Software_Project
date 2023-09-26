@@ -6,19 +6,19 @@
 #include <string.h>
 #include "symnmf.h"
 
-// Python wrapper functions
+/*Python wrapper functions*/
 static PyObject *py_sym(PyObject *self, PyObject *args)
 {
     PyObject *py_list;
     int n, m;
 
-    // Parse Python arguments.
+    /*Parse Python arguments.*/
     if (!PyArg_ParseTuple(args, "Oii", &py_list, &n, &m))
     {
         return NULL;
     }
 
-    // Convert Python list to C array
+    /*Convert Python list to C array*/
     double **X = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
@@ -38,7 +38,7 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
 
     double **result = sym(X, n, m);
 
-    // Convert C array back to Python list
+    /*Convert C array back to Python list*/
     PyObject *py_result = PyList_New(n);
     for (int i = 0; i < n; i++)
     {
@@ -50,7 +50,7 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
         PyList_SetItem(py_result, i, py_row);
     }
 
-    // Free allocated C array and result array
+    /* Free allocated C array and result array*/
     for (int i = 0; i < n; i++)
     {
         free(X[i]);
@@ -67,13 +67,13 @@ static PyObject *py_ddg(PyObject *self, PyObject *args)
     PyObject *py_list;
     int n;
 
-    // Parse Python arguments
+    /*Parse Python arguments*/
     if (!PyArg_ParseTuple(args, "Oi", &py_list, &n))
     {
         return NULL;
     }
 
-    // Convert Python list to C array
+    /*Convert Python list to C array*/
     double **A = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
@@ -86,10 +86,10 @@ static PyObject *py_ddg(PyObject *self, PyObject *args)
         }
     }
 
-    // Call C function ddg
+    /*Call C function ddg*/
     double **result = ddg(A, n);
 
-    // Convert C array to Python list
+    /*Convert C array to Python list*/
     PyObject *py_result = PyList_New(n);
     for (int i = 0; i < n; i++)
     {
@@ -101,7 +101,7 @@ static PyObject *py_ddg(PyObject *self, PyObject *args)
         PyList_SetItem(py_result, i, py_row);
     }
 
-    // Free allocated C array and result array
+    /*Free allocated C array and result array*/
     for (int i = 0; i < n; i++)
     {
         free(A[i]);
@@ -119,13 +119,13 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
     PyObject *py_list;
     int n;
 
-    // Parse Python arguments
+    /*Parse Python arguments*/
     if (!PyArg_ParseTuple(args, "Oi", &py_list, &n))
     {
         return NULL;
     }
 
-    // Convert Python list to C array
+    /* Convert Python list to C array*/
     double **A = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
@@ -138,10 +138,10 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
         }
     }
 
-    // Call C function norm
+    /*Call C function norm*/
     double **result = norm(A, n);
 
-    // Convert C array to Python list
+    /*Convert C array to Python list*/
     PyObject *py_result = PyList_New(n);
     for (int i = 0; i < n; i++)
     {
@@ -153,7 +153,7 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
         PyList_SetItem(py_result, i, py_row);
     }
 
-    // Free allocated C array and result array
+    /*Free allocated C array and result array*/
     for (int i = 0; i < n; i++)
     {
         free(A[i]);
@@ -171,13 +171,13 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
     double **H, **W;
     int n, k;
 
-    // Parse Python arguments
+    /*Parse Python arguments*/
     if (!PyArg_ParseTuple(args, "OOii", &py_list_H, &py_list_W, &n, &k))
     {
         return NULL;
     }
 
-    // Convert Python list to C array for H
+    /*Convert Python list to C array for H*/
     H = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
@@ -190,7 +190,7 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
         }
     }
 
-    // Convert Python list to C array for W
+    /*Convert Python list to C array for W*/
     W = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)
     {
@@ -203,10 +203,10 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
         }
     }
 
-    // Call C function
+    /*Call C function*/
     double **result = symnmf(H, W, n, k);
 
-    // Convert C array to Python list
+    /*Convert C array to Python list*/
     PyObject *py_result = PyList_New(n);
     for (int i = 0; i < n; i++)
     {
@@ -221,14 +221,13 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
     return py_result;
 }
 
-// Define the methods that will be available in the Python module
+/*Define the methods that will be available in the Python module*/
 static PyMethodDef symnmfC_methods[] = {
     {"sym", py_sym, METH_VARARGS, "Calculate sym"},
     {"ddg", py_ddg, METH_VARARGS, "Calculate ddg"},
     {"norm", py_norm, METH_VARARGS, "Calculate norm"},
-    {"symnmf", py_symnmf, METH_VARARGS, "Calculate symnmf"},
-    {NULL, NULL, 0, NULL} // Sentinel
-};
+    {"symnmff", py_symnmf, METH_VARARGS, "Calculate symnmf"},
+    {NULL, NULL, 0, NULL}};
 
 static struct PyModuleDef symnmfC_module = {
     PyModuleDef_HEAD_INIT,
@@ -237,7 +236,7 @@ static struct PyModuleDef symnmfC_module = {
     -1,        /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
     symnmfC_methods};
 
-// Initialization function for the module
+/*Initialization function for the module*/
 PyMODINIT_FUNC PyInit_symnmfC(void)
 {
     return PyModule_Create(&symnmfC_module);

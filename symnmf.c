@@ -17,7 +17,8 @@ Node *createNode(char data)
     Node *newNode = (Node *)malloc(sizeof(Node));
     if (newNode == NULL)
     {
-        printandexit();
+        printf("An Error Has Occurred 1");
+        exit(1);
     }
     newNode->data = data;
     newNode->prev = NULL;
@@ -81,15 +82,9 @@ void printList(LinkedList *list)
     current = list->tail;
 }
 
-// function to read the file and put the input in an array
+/*function to read the file and put the input in an array*/
 ArrayInfo read_file_to_array(char *filename)
 {
-    FILE *file = fopen(filename, "r");
-    if (file == NULL)
-    {
-        printandexit();
-    }
-
     int wordlength;
     int i, j, k;
     double **array;
@@ -97,13 +92,21 @@ ArrayInfo read_file_to_array(char *filename)
     char ch;
     Node *current;
     Node *wordStart;
+    FILE *file = fopen(filename, "r");
+    ArrayInfo result;
     LinkedList allChars;
     initializeList(&allChars);
     dimensionOfVector = 1;
     numberOfVectors = 0;
     didWeGetFirstLine = 0;
 
-    // read the file and put the input in an array
+    if (file == NULL)
+    {
+        printf("An Error Has Occurred 2");
+        exit(1);
+    }
+
+    /*read the file and put the input in an array*/
     while ((ch = fgetc(file)) != EOF)
     {
         if (ch == ',' && didWeGetFirstLine == 0)
@@ -121,11 +124,12 @@ ArrayInfo read_file_to_array(char *filename)
             insert(&allChars, ch);
         }
     }
-    fclose(file); // Close the file
+    fclose(file); /*Close the file*/
     array = malloc(numberOfVectors * sizeof(double *));
     if (array == NULL)
     {
-        printandexit();
+        printf("An Error Has Occurred 3");
+        exit(1);
     }
     current = allChars.head;
     wordStart = current;
@@ -136,8 +140,10 @@ ArrayInfo read_file_to_array(char *filename)
         array[i] = malloc(dimensionOfVector * sizeof(double));
         if (array[i] == NULL)
         {
-            printandexit();
+            printf("An Error Has Occurred 4");
+            exit(1);
         }
+
         for (j = 0; j < dimensionOfVector; j++)
         {
             wordlength = 0;
@@ -156,7 +162,8 @@ ArrayInfo read_file_to_array(char *filename)
                 {
                     free(array[k]);
                 }
-                printandexit();
+                printf("An Error Has Occurred 5");
+                exit(1);
             }
             for (k = 0; k < wordlength; k++)
             {
@@ -170,7 +177,6 @@ ArrayInfo read_file_to_array(char *filename)
     }
 
     freeList(&allChars);
-    ArrayInfo result;
     result.array = array;
     result.rows = numberOfVectors;
     result.cols = dimensionOfVector;
@@ -178,20 +184,29 @@ ArrayInfo read_file_to_array(char *filename)
 }
 /*endregion PUT_INPUT_IN_ARRAY*/
 
-/*region goals and help functions*/
-// Function to calculate and output the similarity matrix
+/*region goals functions*/
+/*Function to calculate and output the similarity matrix*/
 double **sym(double **X, int rows, int cols)
 {
 
-    double **A = allocateMatrix(rows, rows);
-    for (int i = 0; i < rows; i++)
+    double **A = malloc(rows * sizeof(double *));
+    int i;
+    int j;
+    for (i = 0; i < rows; i++)
     {
-        for (int j = 0; j < rows; j++)
+        A[i] = malloc(rows * sizeof(double));
+    }
+
+    for (i = 0; i < rows; i++)
+    {
+
+        for (j = 0; j < rows; j++)
         {
             if (i != j)
             {
                 double squaredDistance = 0.0;
-                for (int d = 0; d < cols; d++)
+                int d;
+                for (d = 0; d < cols; d++)
                 {
                     double diff = X[i][d] - X[j][d];
                     squaredDistance += diff * diff;
@@ -208,24 +223,29 @@ double **sym(double **X, int rows, int cols)
     return A;
 }
 
-// Function to calculate and output the diagonal degree matrix
+/*Function to calculate and output the diagonal degree matrix*/
 
 double **ddg(double **A, int n)
 {
-    double **D = allocateMatrix(n, n);
-    // Initialize the row with zeros
-    for (int i = 0; i < n; i++)
+    double **D = malloc(n * sizeof(double *));
+    int i, j;
+    for (i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
+        D[i] = malloc(n * sizeof(double));
+        /*Initialize the row with zeros*/
+
+        for (j = 0; j < n; j++)
         {
             D[i][j] = 0.0;
         }
     }
-    // Calculate the diagonal degree values
-    for (int i = 0; i < n; i++)
+
+    /*Calculate the diagonal degree values*/
+
+    for (i = 0; i < n; i++)
     {
         double degree = 0.0;
-        for (int j = 0; j < n; j++)
+        for (j = 0; j < n; j++)
         {
             degree += A[i][j];
         }
@@ -234,7 +254,53 @@ double **ddg(double **A, int n)
 
     return D;
 }
-// Function to calculate W = D^-1/2 * A * D^-1/2
+
+/*Allocate memory for a matrix*/
+double **allocateMatrix(int rows, int cols)
+{
+    double **matrix = (double **)malloc(rows * sizeof(double *));
+    int i;
+    for (i = 0; i < rows; ++i)
+    {
+        matrix[i] = (double *)malloc(cols * sizeof(double));
+    }
+    return matrix;
+}
+
+/*Calculate the D^-1/2 matrix*/
+double **computeDHalfInverse(double **D, int n)
+{
+    double **D_half_inv = allocateMatrix(n, n);
+    int i, j;
+    for (i = 0; i < n; ++i)
+    {
+
+        for (j = 0; j < n; ++j)
+        {
+            D_half_inv[i][j] = (i == j) ? 1 / sqrt(D[i][j]) : 0;
+        }
+    }
+    return D_half_inv;
+}
+/*Multiply two matrices*/
+double **matrixMultiply(double **A, double **B, int n)
+{
+    double **result = allocateMatrix(n, n);
+    int i, j, k;
+    for (i = 0; i < n; ++i)
+    {
+        for (j = 0; j < n; ++j)
+        {
+            result[i][j] = 0;
+            for (k = 0; k < n; ++k)
+            {
+                result[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+    return result;
+}
+/*Function to calculate W = D^-1/2 * A * D^-1/2*/
 double **norm(double **A, int n)
 {
     double **D = ddg(A, n);
@@ -242,8 +308,9 @@ double **norm(double **A, int n)
     double **temp = matrixMultiply(D_half_inv, A, n);
     double **W = matrixMultiply(temp, D_half_inv, n);
 
-    // Free allocated memory for intermediate matrices
-    for (int i = 0; i < n; ++i)
+    /*Free allocated memory for intermediate matrices*/
+    int i;
+    for (i = 0; i < n; ++i)
     {
         free(D_half_inv[i]);
         free(temp[i]);
@@ -256,33 +323,39 @@ double **norm(double **A, int n)
 
 double **symnmf(double **H, double **W, int n, int k)
 {
-    // Allocate space for the new H matrix
+    /*Allocate space for the new H matrix*/
     double **new_H = allocateMatrix(n, k);
 
-    // Step 1.4.2: Update H
-    for (int iter = 0; iter < MAX_ITER; iter++)
+    /*Step 1.4.2: Update H*/
+    int i, iter, j, l, m;
+    double sum_inner;
+    for (iter = 0; iter < MAX_ITER; iter++)
     {
         double diffNorm = 0.0;
 
-        // Update new_H based on current H
-        for (int i = 0; i < n; i++)
+        /*Update new_H based on current H*/
+
+        for (i = 0; i < n; i++)
         {
-            for (int j = 0; j < k; j++)
+
+            for (j = 0; j < k; j++)
             {
                 double numerator = 0.0;
                 double denominator = 0.0;
 
-                // Calculate (WH)ij
-                for (int l = 0; l < n; l++)
+                /*Calculate (WH)ij*/
+
+                for (l = 0; l < n; l++)
                 {
                     numerator += W[i][l] * H[l][j];
                 }
 
-                // Calculate (H(H^T)H)ij
-                for (int l = 0; l < n; l++)
+                /*Calculate (H(H^T)H)ij*/
+
+                for (l = 0; l < n; l++)
                 {
-                    double sum_inner = 0.0;
-                    for (int m = 0; m < k; m++)
+                    sum_inner = 0.0;
+                    for (m = 0; m < k; m++)
                     {
                         sum_inner += H[i][m] * H[l][m];
                     }
@@ -293,24 +366,24 @@ double **symnmf(double **H, double **W, int n, int k)
             }
         }
 
-        // Calculate the norm of the difference between H and new_H
-        for (int i = 0; i < n; i++)
+        /*Calculate the norm of the difference between H and new_H*/
+        for (i = 0; i < n; i++)
         {
-            for (int j = 0; j < k; j++)
+            for (j = 0; j < k; j++)
             {
                 diffNorm += pow(new_H[i][j] - H[i][j], 2);
-                H[i][j] = new_H[i][j]; // Update H matrix
+                H[i][j] = new_H[i][j]; /*Update H matrix*/
             }
         }
 
-        // Check for convergence
+        /*Check for convergence*/
         if (diffNorm < EPSILON)
         {
             break;
         }
     }
 
-    for (int i = 0; i < n; i++)
+    for (i = 0; i < n; i++)
     {
         free(new_H[i]);
     }
@@ -318,54 +391,8 @@ double **symnmf(double **H, double **W, int n, int k)
 
     return H;
 }
-void printandexit()
-{
-    printf("An Error Has Occurred");
-        exit(1);
-}
 
-// Allocate memory for a matrix
-double **allocateMatrix(int rows, int cols)
-{
-    double **matrix = (double **)malloc(rows * sizeof(double *));
-    for (int i = 0; i < rows; ++i)
-    {
-        matrix[i] = (double *)malloc(cols * sizeof(double));
-    }
-    return matrix;
-}
-
-// Calculate the D^-1/2 matrix
-double **computeDHalfInverse(double **D, int n)
-{
-    double **D_half_inv = allocateMatrix(n, n);
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < n; ++j)
-        {
-            D_half_inv[i][j] = (i == j) ? 1 / sqrt(D[i][j]) : 0;
-        }
-    }
-    return D_half_inv;
-}
-// Multiply two matrices
-double **matrixMultiply(double **A, double **B, int n)
-{
-    double **result = allocateMatrix(n, n);
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < n; ++j)
-        {
-            result[i][j] = 0;
-            for (int k = 0; k < n; ++k)
-            {
-                result[i][j] += A[i][k] * B[k][j];
-            }
-        }
-    }
-    return result;
-}
-/*endregion goals and help functions*/
+/*endregion goals functions*/
 
 /*region MAIN*/
 int main(int argc, char *argv[])
@@ -377,18 +404,20 @@ int main(int argc, char *argv[])
     int number_datapoints;
     double **outputmatrix;
     double **tempmatrix = NULL;
+    int i, j;
+    ArrayInfo datapointsstruct;
 
     if (argc >= 3)
     {
         mode = argv[1];
         input_file_name = argv[2];
     }
-    ArrayInfo datapointsstruct = read_file_to_array(input_file_name);
+    datapointsstruct = read_file_to_array(input_file_name);
     datapoints = datapointsstruct.array;
 
     number_datapoints = datapointsstruct.rows;
 
-    // if mode is equal to sym
+    /*if mode is equal to sym*/
     if (strcmp(mode, "sym") == 0)
     {
         outputmatrix = sym(datapoints, number_datapoints, dimensionOfVector);
@@ -408,10 +437,11 @@ int main(int argc, char *argv[])
         printf("An Error Has Occurred");
         exit(1);
     }
-    // print outputmatrix
-    for (int i = 0; i < number_datapoints; i++)
+    /*print outputmatrix*/
+
+    for (i = 0; i < number_datapoints; i++)
     {
-        for (int j = 0; j < number_datapoints; j++)
+        for (j = 0; j < number_datapoints; j++)
         {
             if (j != 0)
                 printf(",");
@@ -419,6 +449,7 @@ int main(int argc, char *argv[])
         }
         printf("\n");
     }
+    return 0;
 }
 
 /*endregion MAIN*/
