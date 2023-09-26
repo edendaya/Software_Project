@@ -22,4 +22,7 @@ rm ./build/lib.linux-x86_64-3.6/symnmfC.cpython-36m-x86_64-linux-gnu.so ; python
 gcc -o symnmf symnmf.c -lm
 ./symnmf ddg olddata/tests/input_1.txt
 
+## run analysis
+python3 analysis.py 3 ./olddata/tests/input_1.txt
+
 # TheSoftwareProject

@@ -17,8 +17,7 @@ Node *createNode(char data)
     Node *newNode = (Node *)malloc(sizeof(Node));
     if (newNode == NULL)
     {
-        printf("An Error Has Occurred 1");
-        exit(1);
+        printandexit();
     }
     newNode->data = data;
     newNode->prev = NULL;
@@ -102,8 +101,7 @@ ArrayInfo read_file_to_array(char *filename)
 
     if (file == NULL)
     {
-        printf("An Error Has Occurred 2");
-        exit(1);
+        printandexit();
     }
 
     /*read the file and put the input in an array*/
@@ -128,8 +126,7 @@ ArrayInfo read_file_to_array(char *filename)
     array = malloc(numberOfVectors * sizeof(double *));
     if (array == NULL)
     {
-        printf("An Error Has Occurred 3");
-        exit(1);
+        printandexit();
     }
     current = allChars.head;
     wordStart = current;
@@ -140,8 +137,7 @@ ArrayInfo read_file_to_array(char *filename)
         array[i] = malloc(dimensionOfVector * sizeof(double));
         if (array[i] == NULL)
         {
-            printf("An Error Has Occurred 4");
-            exit(1);
+            printandexit();
         }
 
         for (j = 0; j < dimensionOfVector; j++)
@@ -162,8 +158,7 @@ ArrayInfo read_file_to_array(char *filename)
                 {
                     free(array[k]);
                 }
-                printf("An Error Has Occurred 5");
-                exit(1);
+                printandexit();
             }
             for (k = 0; k < wordlength; k++)
             {
@@ -184,7 +179,7 @@ ArrayInfo read_file_to_array(char *filename)
 }
 /*endregion PUT_INPUT_IN_ARRAY*/
 
-/*region goals functions*/
+/*region goals and help functions*/
 /*Function to calculate and output the similarity matrix*/
 double **sym(double **X, int rows, int cols)
 {
@@ -244,52 +239,6 @@ double **ddg(double **A, int n)
     }
 
     return D;
-}
-
-/*Allocate memory for a matrix*/
-double **allocateMatrix(int rows, int cols)
-{
-    double **matrix = (double **)malloc(rows * sizeof(double *));
-    int i;
-    for (i = 0; i < rows; ++i)
-    {
-        matrix[i] = (double *)malloc(cols * sizeof(double));
-    }
-    return matrix;
-}
-
-/*Calculate the D^-1/2 matrix*/
-double **computeDHalfInverse(double **D, int n)
-{
-    double **D_half_inv = allocateMatrix(n, n);
-    int i, j;
-    for (i = 0; i < n; ++i)
-    {
-
-        for (j = 0; j < n; ++j)
-        {
-            D_half_inv[i][j] = (i == j) ? 1 / sqrt(D[i][j]) : 0;
-        }
-    }
-    return D_half_inv;
-}
-/*Multiply two matrices*/
-double **matrixMultiply(double **A, double **B, int n)
-{
-    double **result = allocateMatrix(n, n);
-    int i, j, k;
-    for (i = 0; i < n; ++i)
-    {
-        for (j = 0; j < n; ++j)
-        {
-            result[i][j] = 0;
-            for (k = 0; k < n; ++k)
-            {
-                result[i][j] += A[i][k] * B[k][j];
-            }
-        }
-    }
-    return result;
 }
 /*Function to calculate W = D^-1/2 * A * D^-1/2*/
 double **norm(double **A, int n)
@@ -383,7 +332,59 @@ double **symnmf(double **H, double **W, int n, int k)
     return H;
 }
 
-/*endregion goals functions*/
+void printandexit()
+{
+    printf("An Error Has Occurred");
+    exit(1);
+}
+
+/*Allocate memory for a matrix*/
+double **allocateMatrix(int rows, int cols)
+{
+    double **matrix = (double **)malloc(rows * sizeof(double *));
+    int i;
+    for (i = 0; i < rows; ++i)
+    {
+        matrix[i] = (double *)malloc(cols * sizeof(double));
+    }
+    return matrix;
+}
+
+/*Calculate the D^-1/2 matrix*/
+double **computeDHalfInverse(double **D, int n)
+{
+    double **D_half_inv = allocateMatrix(n, n);
+    int i, j;
+    for (i = 0; i < n; ++i)
+    {
+
+        for (j = 0; j < n; ++j)
+        {
+            D_half_inv[i][j] = (i == j) ? 1 / sqrt(D[i][j]) : 0;
+        }
+    }
+    return D_half_inv;
+}
+/*Multiply two matrices*/
+double **matrixMultiply(double **A, double **B, int n)
+{
+    double **result = allocateMatrix(n, n);
+    int i, j, k;
+    for (i = 0; i < n; ++i)
+    {
+        for (j = 0; j < n; ++j)
+        {
+            result[i][j] = 0;
+            for (k = 0; k < n; ++k)
+            {
+                result[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+    return result;
+}
+
+/*endregion goals and help functions*/
 
 /*region MAIN*/
 int main(int argc, char *argv[])

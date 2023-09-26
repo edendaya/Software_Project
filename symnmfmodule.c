@@ -6,13 +6,7 @@
 #include <string.h>
 #include "symnmf.h"
 
-<<<<<<< HEAD
-printf("test");
-
-// Python wrapper functions
-=======
 /*Python wrapper functions*/
->>>>>>> ea54a255ef7fb9271ea136fc4fbe7518e3c5d1b0
 static PyObject *py_sym(PyObject *self, PyObject *args)
 {
     PyObject *py_list;
