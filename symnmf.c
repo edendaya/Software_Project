@@ -367,7 +367,7 @@ double **symnmf(double **H, double **W, int n, int k)
     {
         free(new_H[i]);
     }
-    //free(new_H);
+    free(new_H);
 
     return H;
 }
@@ -404,31 +404,16 @@ int main(int argc, char *argv[])
     {
         tempmatrix = sym(datapoints, number_datapoints, dimensionOfVector);
         outputmatrix = ddg(tempmatrix, number_datapoints);
-        // free tempmatrix
-        for (int i = 0; i < number_datapoints; i++)
-        {
-            free(tempmatrix[i]);
-        }
     }
     else if (strcmp(mode, "norm") == 0)
     {
         tempmatrix = sym(datapoints, number_datapoints, dimensionOfVector);
         outputmatrix = norm(tempmatrix, number_datapoints);
-        // free tempmatrix
-        for (int i = 0; i < number_datapoints; i++)
-        {
-            free(tempmatrix[i]);
-        }
     }
     else
     {
         printf("An Error Has Occurred");
         exit(1);
-    }
-    // free datapoints
-    for (int i = 0; i < number_datapoints; i++)
-    {
-        free(datapoints[i]);
     }
     // print outputmatrix
     for (int i = 0; i < number_datapoints; i++)
@@ -441,17 +426,6 @@ int main(int argc, char *argv[])
         }
         printf("\n");
     }
-    // free outputmatrix
-    for (int i = 0; i < number_datapoints; i++)
-    {
-        free(outputmatrix[i]);
-    }
-
-    for (int i = 0; i < numberOfVectors; i++)
-    {
-        free(datapoints[i]);
-    }
-    free(datapoints);
 }
 
 /*endregion MAIN*/
