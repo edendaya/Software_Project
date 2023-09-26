@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -ansi -Wall -Wextra -Werror -pedantic-errors
 
 # Source files
-SRCS = symnmf.c main.c  # Add more source files if needed
+SRCS = symnmf.c main.c  
 
 # Object files
 OBJS = $(SRCS:.c=.o)
