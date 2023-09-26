@@ -226,7 +226,7 @@ static PyMethodDef symnmfC_methods[] = {
     {"sym", py_sym, METH_VARARGS, "Calculate sym"},
     {"ddg", py_ddg, METH_VARARGS, "Calculate ddg"},
     {"norm", py_norm, METH_VARARGS, "Calculate norm"},
-    {"symnmff", py_symnmf, METH_VARARGS, "Calculate symnmf"},
+    {"symnmf", py_symnmf, METH_VARARGS, "Calculate symnmf"},
     {NULL, NULL, 0, NULL} // Sentinel
 };
 

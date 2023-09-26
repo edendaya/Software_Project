@@ -405,7 +405,8 @@ int main(int argc, char *argv[])
     }
     else
     {
-        printandexit();
+        printf("An Error Has Occurred");
+        exit(1);
     }
     // print outputmatrix
     for (int i = 0; i < number_datapoints; i++)
