@@ -18,9 +18,6 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    // Determine m based on the first row (assuming all rows have the same length)
-    m = PyList_Size(PyList_GetItem(py_list, 0));
-
     // Convert Python list to C array
     double **X = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++)

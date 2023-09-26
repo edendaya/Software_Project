@@ -455,6 +455,12 @@ int main(int argc, char *argv[])
     {
         free(outputmatrix[i]);
     }
+
+    for (int i = 0; i < numberOfVectors; i++)
+    {
+        free(datapoints[i]);
+    }
+    free(datapoints);
 }
 
 /*endregion MAIN*/
