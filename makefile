@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -ansi -Wall -Wextra -Werror -pedantic-errors
 
 # Source files
-SRCS = symnmf.c
+SRCS = symnmf.c kmeansmodule.c
 
 # Object files
 OBJS = $(SRCS:.c=.o)
@@ -18,7 +18,7 @@ $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) -lm
 
 # Dependency generation
-%.o: %.c
+%.o: %.c symnmf.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean rule
