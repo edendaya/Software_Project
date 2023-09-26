@@ -18,12 +18,7 @@ def read_file_to_array(file_path):
 def symnmf(k, vectors):
     n = len(vectors)
     m = len(vectors[0])
-<<<<<<< HEAD
     A = sym(vectors, n, m)
-=======
-    A = sym(vectors,n, m)
-    D = ddg(A, n)
->>>>>>> ea54a255ef7fb9271ea136fc4fbe7518e3c5d1b0
     W = norm(A, n)
     meanW = np.mean(W)
 
@@ -32,7 +27,7 @@ def symnmf(k, vectors):
     H = H_np.tolist()
 
     # Call the symnmf() method from the C extension module
-    final_H=symnmfC.symnmff(H, W, len(W),k)
+    final_H=symnmfC.symnmf(H, W, len(W),k)
 
     return final_H 
 

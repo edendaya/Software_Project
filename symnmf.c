@@ -188,21 +188,9 @@ ArrayInfo read_file_to_array(char *filename)
 /*Function to calculate and output the similarity matrix*/
 double **sym(double **X, int rows, int cols)
 {
-<<<<<<< HEAD
     double **A = allocateMatrix(rows, rows);
-    for (int i = 0; i < rows; i++)
-=======
-
-    double **A = malloc(rows * sizeof(double *));
-    int i;
-    int j;
+    int i, j;
     for (i = 0; i < rows; i++)
-    {
-        A[i] = malloc(rows * sizeof(double));
-    }
-
-    for (i = 0; i < rows; i++)
->>>>>>> ea54a255ef7fb9271ea136fc4fbe7518e3c5d1b0
     {
 
         for (j = 0; j < rows; j++)
@@ -232,13 +220,11 @@ double **sym(double **X, int rows, int cols)
 
 double **ddg(double **A, int n)
 {
-    double **D = malloc(n * sizeof(double *));
+    double **D = allocateMatrix(n, n);
     int i, j;
+    /*Initialize the row with zeros*/
     for (i = 0; i < n; i++)
     {
-        D[i] = malloc(n * sizeof(double));
-        /*Initialize the row with zeros*/
-
         for (j = 0; j < n; j++)
         {
             D[i][j] = 0.0;
