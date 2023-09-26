@@ -5,6 +5,9 @@ import symnmfC
 # Set the random seed for consistent initialization
 np.random.seed(0)
 
+def printandexit():
+    print("An Error Has Occurred")
+    sys.exit(1)
 
 def read_file_to_array(file_path):
     data = []
@@ -52,8 +55,7 @@ def norm(A, n):
 
 # Arguments Area of Code
 if len(sys.argv) != 4:
-    print("An Error Has Occurred")
-    sys.exit(1)
+    printandexit()
 k = int(sys.argv[1])
 goal = sys.argv[2]
 file_name = sys.argv[3]
@@ -73,8 +75,7 @@ elif goal == "norm":
     A = sym(vectors,n,m)
     output_matrix = norm(A,n)
 else:
-    print("An Error Has Occurred") 
-    sys.exit(1)
+    printandexit()
     
 #Prints the output matrix
 for row in output_matrix:
