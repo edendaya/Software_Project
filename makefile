@@ -1,17 +1,15 @@
 CC = gcc
-CFLAGS = -ansi -Wall -Wextra -Werror -pedantic-errors -fPIC -I/usr/include/python3.6m/
-LDFLAGS = -lm -shared
+CFLAGS = -ansi -Wall -Wextra -Werror -pedantic-errors
+LDFLAGS = -lm  # Add the -lm flag to link with the math library
 TARGET = symnmf
-SHARED_OBJECT = symnmfC.so
-SOURCES = symnmf.c 
+SOURCES = symnmf.c
 
-all: $(TARGET) $(SHARED_OBJECT)
+all: $(TARGET)
 
 $(TARGET): $(SOURCES)
 	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET) $(LDFLAGS)
 
-$(SHARED_OBJECT): $(SOURCES)
-	$(CC) $(CFLAGS) -shared $(SOURCES) -o $(SHARED_OBJECT) $(LDFLAGS)
-
 clean:
-	rm -f $(TARGET) $(SHARED_OBJECT)
+	rm -f $(TARGET)
+
+.PHONY: all clean

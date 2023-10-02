@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import symnmfC
 
+
 # Set the random seed for consistent initialization
 np.random.seed(0)
 
