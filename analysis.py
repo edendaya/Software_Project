@@ -5,11 +5,11 @@ import numpy as np
 import symnmf
 from sklearn.metrics import silhouette_score, pairwise_distances
 
-#User Args
+# User Args
 k = int(sys.argv[1])
 file_name = sys.argv[2]
 
-#define variables for KMenas
+# Define variables for k-means
 EPSILON = 0.0001
 ITER = 300
 centroids = []
@@ -27,15 +27,15 @@ def read_data(file_name):
 
 vectors = read_data(file_name)
 
-#Functions for k-means area
+# K-means Area
+# Functions for k-means area
 def delta(vector1, vector2):
     output = 0
     for i in range(0, len(vector1)):
         output += (vector1[i]-vector2[i])**2
     return math.sqrt(output)
 
-
-# checks if all the deltas are smaller then epsilon
+# Checks if all the deltas are smaller then epsilon
 def convergence(centroids, oldcentroids):
     if len(oldcentroids) == 0:
         return False
@@ -44,11 +44,10 @@ def convergence(centroids, oldcentroids):
             return False
     return True
 
-# puts the centroid in the dictionary and also puts the vector in the centroid list
+# Puts the centroid in the dictionary and also puts the vector in the centroid list
 def putvectorinmatchingcentroid(vector):
     closestcentroid = min(centroids, key=lambda x: delta(vector, x[0]))
     closestcentroid[1].append(vector)
-    # cenroid_vector_dictionary[tuple(vector)]=closestcentroid
 
 def update_centroid(centroid):
     updated_centroid = [0] * len(centroid[0])
@@ -60,7 +59,7 @@ def update_centroid(centroid):
             updated_centroid[i] = total / len(centroid[1])
     centroid[0] = updated_centroid
 
-#End functions for k-means area
+# End functions for k-means area
 
 # K-means Algorithm
 for i in range(0, k):
@@ -83,6 +82,7 @@ for vector in vectors:
 # Calculate silhouette score for K-means
 silhouette_kmeans = silhouette_score(vectors, cluster_labels_kmeans)
 
+# Symnmf Area
 # Call the symnmf function and capture the result
 vectors = vectors.tolist()
 H = symnmf.symnmf(k, vectors)
@@ -92,6 +92,7 @@ cluster_labels_nmf = np.argmax(H, axis=1)
 
 # Calculate silhouette score for nmf
 silhouette_nmf = silhouette_score(vectors, cluster_labels_nmf)
+
 # Print the scores
 print("nmf: {:.4f}".format(silhouette_nmf))
 print("kmeans: {:.4f}".format(silhouette_kmeans))

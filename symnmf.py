@@ -6,7 +6,8 @@ import symnmfC
 # Set the random seed for consistent initialization
 np.random.seed(0)
 
-def printandexit():
+# Functions Area of Code
+def print_and_exit():
     print("An Error Has Occurred")
     sys.exit(1)
 
@@ -18,6 +19,7 @@ def read_file_to_array(file_path):
             data.append(vector)
     return data
 
+# Goals Functions Area of Code
 def symnmf(k, vectors):
     n = len(vectors)
     m = len(vectors[0])
@@ -50,11 +52,11 @@ def norm(A, n):
     normalized_similarity_matrix = symnmfC.norm(A, n)
     return normalized_similarity_matrix
 
+# Main Area of Code
 def main():
     # Arguments Area of Code
     if len(sys.argv) != 4:
-        printandexit()
-
+        print_and_exit()
     k = int(sys.argv[1])
     goal = sys.argv[2]
     file_name = sys.argv[3]
@@ -74,7 +76,8 @@ def main():
         A = sym(vectors, n, m)
         output_matrix = norm(A, n)
     else:
-        printandexit()
+        print_and_exit()
+    
     # Prints the output matrix
     for row in output_matrix:
         formatted_row = [f"{element:.4f}" for element in row]

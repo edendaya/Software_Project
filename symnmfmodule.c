@@ -2,6 +2,12 @@
 #include <Python.h>
 #include "symnmf.h"
 
+void printAndExitModule()
+{
+    printf("An Error Has Occurred");
+    exit(1);
+}
+
 /* Python wrapper functions */
 static PyObject *py_sym(PyObject *self, PyObject *args)
 {
@@ -21,17 +27,24 @@ static PyObject *py_sym(PyObject *self, PyObject *args)
 
     /* Convert Python list to C array */
     X = malloc(n * sizeof(double *));
+    if (X == NULL)
+    {
+        printAndExitModule();
+    }
     for (i = 0; i < n; i++)
     {
         py_row = PyList_GetItem(py_list, i);
         X[i] = malloc(m * sizeof(double));
+        if (X[i] == NULL)
+        {
+            printAndExitModule();
+        }
         for (j = 0; j < m; j++)
         {
             py_val = PyList_GetItem(py_row, j);
             if (!py_val)
             {
-                printf("Failed to get value at (%d, %d)\n", i, j);
-                return NULL;
+                printAndExitModule();
             }
             X[i][j] = PyFloat_AsDouble(py_val);
         }
@@ -81,10 +94,18 @@ static PyObject *py_ddg(PyObject *self, PyObject *args)
 
     /* Convert Python list to C array */
     A = malloc(n * sizeof(double *));
+    if (A == NULL)
+    {
+        printAndExitModule();
+    }
     for (i = 0; i < n; i++)
     {
         py_row = PyList_GetItem(py_list, i);
         A[i] = malloc(n * sizeof(double));
+        if (A[i] == NULL)
+        {
+            printAndExitModule();
+        }
         for (j = 0; j < n; j++)
         {
             py_val = PyList_GetItem(py_row, j);
@@ -136,10 +157,18 @@ static PyObject *py_norm(PyObject *self, PyObject *args)
 
     /* Convert Python list to C array */
     A = malloc(n * sizeof(double *));
+    if (A == NULL)
+    {
+        printAndExitModule();
+    }
     for (i = 0; i < n; i++)
     {
         py_row = PyList_GetItem(py_list, i);
         A[i] = malloc(n * sizeof(double));
+        if (A[i] == NULL)
+        {
+            printAndExitModule();
+        }
         for (j = 0; j < n; j++)
         {
             py_val = PyList_GetItem(py_row, j);
@@ -189,10 +218,18 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
 
     /* Convert Python list to C array for H */
     H = malloc(n * sizeof(double *));
+    if (H == NULL)
+    {
+        printAndExitModule();
+    }
     for (i = 0; i < n; i++)
     {
         PyObject *py_row = PyList_GetItem(py_list_H, i);
         H[i] = malloc(k * sizeof(double));
+        if (H[i] == NULL)
+        {
+            printAndExitModule();
+        }
         for (j = 0; j < k; j++)
         {
             PyObject *py_value = PyList_GetItem(py_row, j);
@@ -202,10 +239,18 @@ static PyObject *py_symnmf(PyObject *self, PyObject *args)
 
     /* Convert Python list to C array for W */
     W = malloc(n * sizeof(double *));
+    if(W == NULL)
+    {
+        printAndExitModule();
+    }
     for (i = 0; i < n; i++)
     {
         PyObject *py_row = PyList_GetItem(py_list_W, i);
         W[i] = malloc(n * sizeof(double));
+        if (W[i] == NULL)
+        {
+            printAndExitModule();
+        }
         for (j = 0; j < n; j++)
         {
             PyObject *py_value = PyList_GetItem(py_row, j);
