@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -ansi -Wall -Wextra -Werror -pedantic-errors
-LDFLAGS = -lm  # Add the -lm flag to link with the math library
+LDFLAGS = -lm  
 TARGET = symnmf
 SOURCES = symnmf.c
 
