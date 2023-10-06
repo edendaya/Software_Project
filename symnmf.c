@@ -252,7 +252,11 @@ double **norm(double **A, int n)
     }
     free(D_half_inv);
     free(temp);
-
+    for (i = 0; i < n; ++i)
+    {
+        free(D[i]);
+    }
+    free(D);
     return W;
 }
 
@@ -337,14 +341,16 @@ double **allocateMatrix(int rows, int cols)
 {
     int i;
     double **matrix = (double **)malloc(rows * sizeof(double *));
-    if (matrix == NULL) {
+    if (matrix == NULL)
+    {
         printAndExit();
     }
 
     for (i = 0; i < rows; ++i)
     {
         matrix[i] = (double *)malloc(cols * sizeof(double));
-        if (matrix[i] == NULL) {
+        if (matrix[i] == NULL)
+        {
             printAndExit();
         }
     }
@@ -421,11 +427,21 @@ int main(int argc, char *argv[])
     {
         tempmatrix = sym(datapoints, number_datapoints, dimensionOfVector);
         outputmatrix = ddg(tempmatrix, number_datapoints);
+        for (i = 0; i < number_datapoints; i++)
+        {
+            free(tempmatrix[i]);
+        }
+        free(tempmatrix);
     }
     else if (strcmp(mode, "norm") == 0)
     {
         tempmatrix = sym(datapoints, number_datapoints, dimensionOfVector);
         outputmatrix = norm(tempmatrix, number_datapoints);
+        for (i = 0; i < number_datapoints; i++)
+        {
+            free(tempmatrix[i]);
+        }
+        free(tempmatrix);
     }
     else
     {
@@ -444,6 +460,15 @@ int main(int argc, char *argv[])
         }
         printf("\n");
     }
+    for (i = 0; i < number_datapoints; i++)
+    {
+        free(datapoints[i]);
+    }
+    free(datapoints);
+    for (i = 0; i < number_datapoints; i++)
+    {
+        free(outputmatrix[i]);
+    }
+    free(outputmatrix);
     return 0;
 }
-/*endregion MAIN*/
